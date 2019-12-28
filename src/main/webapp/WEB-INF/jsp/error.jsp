@@ -7,6 +7,8 @@
 </head>
 
 <body>
-<h1>Witaj, ${name}</h1>
+<h1>404</h1>
+Strona, której szukasz, nie została odnaleziona. Zgubiłeś się? Kliknij <a href="/">tutaj</a>, aby wrócić na stronę
+główną.
 </body>
 </html>
