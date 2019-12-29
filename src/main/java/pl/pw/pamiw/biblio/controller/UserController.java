@@ -25,6 +25,6 @@ public class UserController {
     @RequestMapping(value = "/signup", method = RequestMethod.GET)
     public String signUpPage() {
         System.out.println(userService.notYetImplemented());
-        return notYetImplementedPage();
+      return "signup";
     }
 }
