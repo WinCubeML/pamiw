@@ -40,7 +40,7 @@ public class UserController {
     @RequestMapping(value = "/signup", method = RequestMethod.POST)
     public String signUpUser(@ModelAttribute User user) {
         User savedUser = userService.save(user);
-        return "welcome";
+        return "redirect:/";
     }
 
     @RequestMapping(value = "/signup/checklogin/{login}", method = RequestMethod.GET)
