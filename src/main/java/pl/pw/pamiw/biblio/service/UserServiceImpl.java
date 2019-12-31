@@ -7,7 +7,6 @@ import pl.pw.pamiw.biblio.repositories.UserRepository;
 
 import java.util.ArrayList;
 import java.util.List;
-import java.util.Optional;
 
 @Service
 public class UserServiceImpl implements UserService {
@@ -26,8 +25,8 @@ public class UserServiceImpl implements UserService {
     }
 
     @Override
-    public Optional<User> findByLogin(String s) {
-        return Optional.empty();
+    public User findByLogin(String s) {
+        return userRepository.findById(s).orElse(null);
     }
 
     @Override

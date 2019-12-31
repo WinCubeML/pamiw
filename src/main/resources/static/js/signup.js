@@ -95,7 +95,7 @@ function validateLogin() {
     clearTimeout(timeout);
     timeout = setTimeout(function () {
         var x = document.forms["form"]["login"].value;
-        var link = "https://pi.iem.pw.edu.pl/user/" + x;
+        var link = "http://localhost:8080/signup/checklogin/" + x;
         fetch(link).then(resp => {
             if (resp.status == 404) {
                 validator.innerHTML = "Nazwa użytkownika jest wolna.";
