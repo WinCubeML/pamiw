@@ -1,7 +1,5 @@
-<%@ taglib prefix="c" uri="http://java.sun.com/jsp/jstl/core" %>
-<%@ page contentType="text/html; charset=UTF-8" %>
-
-<html>
+<!DOCTYPE html>
+<html xmlns:th="http://www.thymeleaf.org">
 <head>
     <meta charset="UTF-8">
     <title>Witaj</title>
@@ -16,11 +14,13 @@ Nie masz konta? <a href="/signup">Zarejestruj się!</a>
 <h1>kontener</h1>
 <div class="container">
     <table>
-        <c:forEach items="${users}" var="user">
+        <th:block th:each="user : ${users}">
             <tr>
-                <td><c:out value="${user}"/></td>
+                <td th:text="${user.login}">...</td>
+                <td th:text="${user.pesel}">...</td>
+                <td>...</td>
             </tr>
-        </c:forEach>
+        </th:block>
     </table>
 </div>
 </body>

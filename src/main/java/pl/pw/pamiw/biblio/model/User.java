@@ -21,8 +21,4 @@ public class User {
     private String surname;
 
     private String pesel;
-
-    private String birthDate;
-
-    private char sex;
 }

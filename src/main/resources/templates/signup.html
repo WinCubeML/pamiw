@@ -1,17 +1,18 @@
-<%@ page contentType="text/html; charset=UTF-8" %>
-
-<html lang="pl">
+<!DOCTYPE html>
+<html lang="pl" xmlns:th="http://www.thymeleaf.org"
+      xmlns="http://www.w3.org/1999/xhtml">
 <head>
-    <meta charset="utf-8">
+    <meta charset="utf-8" http-equiv="Content-Type" content="text/html">
     <title>Rejestracja użytkownika</title>
-    <link rel="stylesheet" href="/css/signup.css">
+    <link th:href="@{/css/signup.css}" rel="stylesheet" href="../static/css/signup.css">
 </head>
 
 <body>
-<form class="form" id="form" action="https://pi.iem.pw.edu.pl/register" method="POST" enctype="multipart/form-data">
+<!--/*@thymesVar id="user" type="pl.pw.pamiw.biblio.model.User"*/-->
+<form class="form" id="form" method="POST" enctype="multipart/form-data" th:action="@{/signup}" th:object="${user}">
     <div class="formInputText center">
         <label for="login">Login:<br></label>
-        <input type="text" placeholder="Wprowadź login" name="login" id="login">
+        <input type="text" placeholder="Wprowadź login" name="login" id="login" th:field="*{login}">
     </div>
     <div id="showLogin" class="validationShow center">
         <p class="validator" id="validationLogin"></p>
@@ -19,7 +20,7 @@
 
     <div class="formInputText center">
         <label for="pass1">Hasło:<br></label>
-        <input type="password" placeholder="Wprowadź hasło" id="pass1">
+        <input type="password" placeholder="Wprowadź hasło" id="pass1" th:field="*{password}">
     </div>
     <div id="showPassword1" class="validationShow center">
         <p class="validator" id="validationPassword1"></p>
@@ -35,7 +36,7 @@
 
     <div class="formInputText center">
         <label for="firstName">Imię:<br></label>
-        <input type="text" placeholder="Wprowadź imię" name="firstname" id="firstName">
+        <input type="text" placeholder="Wprowadź imię" name="firstname" id="firstName" th:field="*{name}">
     </div>
     <div id="showFirstName" class="validationShow center">
         <p class="validator" id="validationFirstName"></p>
@@ -43,7 +44,7 @@
 
     <div class="formInputText center">
         <label for="lastName">Nazwisko:<br></label>
-        <input type="text" placeholder="Wprowadź nazwisko" name="lastname" id="lastName">
+        <input type="text" placeholder="Wprowadź nazwisko" name="lastname" id="lastName" th:field="*{surname}">
     </div>
     <div id="showLastName" class="validationShow center">
         <p class="validator" id="validationLastName"></p>
@@ -51,7 +52,7 @@
 
     <div class="formInputText center">
         <label for="pesel">PESEL:<br></label>
-        <input type="text" placeholder="Wprowadź PESEL" name="pesel" id="pesel">
+        <input type="text" placeholder="Wprowadź PESEL" name="pesel" id="pesel" th:field="*{pesel}">
     </div>
     <div id="showPesel" class="validationShow center">
         <p class="validator" id="validationPesel"></p>
@@ -92,6 +93,6 @@
         <button type="reset" id="resetForm" class="cancelbtn">Wyczyść dane</button>
     </div>
 </form>
-<script src="/js/signup.js"></script>
+<script th:src="@{/js/signup.js}"></script>
 </body>
 </html>
