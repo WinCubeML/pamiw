@@ -9,6 +9,7 @@ import org.springframework.web.bind.annotation.ModelAttribute;
 import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestMethod;
+import pl.pw.pamiw.biblio.model.LoginDTO;
 import pl.pw.pamiw.biblio.model.User;
 import pl.pw.pamiw.biblio.service.UserService;
 
@@ -27,7 +28,13 @@ public class UserController {
     }
 
     @RequestMapping(value = "/login", method = RequestMethod.GET)
-    public String loginPage() {
+    public String loginPage(Model model) {
+        model.addAttribute("loginDTO", new LoginDTO());
+        return "login";
+    }
+
+    @RequestMapping(value = "/login/authorize", method = RequestMethod.POST)
+    public String authorizeLogin(@ModelAttribute LoginDTO loginDTO) {
         return notYetImplementedPage();
     }
 
