@@ -1,15 +1,15 @@
 package pl.pw.pamiw.biblio.service;
 
 import org.springframework.stereotype.Service;
-import pl.pw.pamiw.biblio.model.LoginJWT;
+import pl.pw.pamiw.biblio.model.SessionData;
 
 import java.util.List;
 
 @Service
 public interface LoginService { //TODO rest of LoginService interface
-    LoginJWT createJWT(LoginJWT jwt);
+    SessionData createSession(SessionData sessionData);
 
-    List<LoginJWT> getJWTbyLogin(String login);
+    List<SessionData> getSessionByLogin(String login);
 
-    void destroyJWT(String login);
+    void destroySession(String login);
 }

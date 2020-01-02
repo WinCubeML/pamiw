@@ -9,7 +9,7 @@ import pl.pw.pamiw.biblio.service.HomePageService;
 import pl.pw.pamiw.biblio.service.UserService;
 
 @Controller
-public class HomePageController {
+public class PageController {
     UserService userService;
 
     @Autowired
@@ -27,5 +27,15 @@ public class HomePageController {
         model.addAttribute("users", userService.getAllUsers());
 
         return "welcome";
+    }
+
+    @RequestMapping(value = "/notyetimplemented", method = RequestMethod.GET)
+    public String notYetImplementedPage() {
+        return "notyetimplemented";
+    }
+
+    @RequestMapping(value = "/error", method = RequestMethod.GET)
+    public String pageNotFound(Model model) {
+        return "error";
     }
 }

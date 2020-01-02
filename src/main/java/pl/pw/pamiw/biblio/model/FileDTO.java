@@ -8,5 +8,4 @@ public class FileDTO { //TODO dokończyć fileDTO
     private String fileName;
     private String authorName;
     private String authorSurname;
-    private byte[] file;
 }

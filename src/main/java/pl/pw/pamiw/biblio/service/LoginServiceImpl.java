@@ -2,7 +2,7 @@ package pl.pw.pamiw.biblio.service;
 
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
-import pl.pw.pamiw.biblio.model.LoginJWT;
+import pl.pw.pamiw.biblio.model.SessionData;
 import pl.pw.pamiw.biblio.repositories.LoginRepository;
 
 import java.util.ArrayList;
@@ -20,19 +20,19 @@ public class LoginServiceImpl implements LoginService { //TODO rest of LoginServ
     }
 
     @Override
-    public LoginJWT createJWT(LoginJWT jwt) {
+    public SessionData createSession(SessionData sessionData) {
         return null;
     }
 
     @Override
-    public List<LoginJWT> getJWTbyLogin(String login) {
-        List<LoginJWT> jwts = new ArrayList<>();
-        loginRepository.findAllById(Collections.singleton(login)).forEach(jwts::add);
-        return jwts;
+    public List<SessionData> getSessionByLogin(String login) {
+        List<SessionData> sessionData = new ArrayList<>();
+        loginRepository.findAllById(Collections.singleton(login)).forEach(sessionData::add);
+        return sessionData;
     }
 
     @Override
-    public void destroyJWT(String login) {
+    public void destroySession(String login) {
 
     }
 }

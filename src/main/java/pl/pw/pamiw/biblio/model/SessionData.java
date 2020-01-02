@@ -6,13 +6,13 @@ import lombok.Setter;
 import org.springframework.data.annotation.Id;
 import org.springframework.data.redis.core.RedisHash;
 
-@RedisHash("jwt")
+@RedisHash("sessiondata")
 @Getter
 @Setter
 @NoArgsConstructor
-public class LoginJWT {
+public class SessionData {
     @Id
-    private Long id;
+    private String sessionId;
     private String login;
-    private String JWT;
+    private String expiryDate;
 }

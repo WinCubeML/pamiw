@@ -17,7 +17,7 @@ public class LoginController {
     private LoginService loginService;
 
     @Autowired
-    UserController userController;
+    PageController pageController;
 
     @Autowired
     public void setLoginServices(UserService userService, LoginService loginService) {
@@ -41,6 +41,6 @@ public class LoginController {
         } else {
             System.out.println("Nie zalogowano bo mnie nie ma albo coś innego");
         }
-        return userController.notYetImplementedPage();
+        return pageController.notYetImplementedPage();
     }
 }

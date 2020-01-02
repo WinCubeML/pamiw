@@ -17,13 +17,11 @@ public class UserController {
     private UserService userService;
 
     @Autowired
+    PageController pageController;
+
+    @Autowired
     public void setUserService(UserService userService) {
         this.userService = userService;
-    }
-
-    @RequestMapping(value = "/notyetimplemented", method = RequestMethod.GET)
-    public String notYetImplementedPage() {
-        return "notyetimplemented";
     }
 
     @RequestMapping(value = "/signup", method = RequestMethod.GET)
