@@ -9,7 +9,6 @@ import org.springframework.web.bind.annotation.ModelAttribute;
 import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestMethod;
-import pl.pw.pamiw.biblio.model.LoginDTO;
 import pl.pw.pamiw.biblio.model.User;
 import pl.pw.pamiw.biblio.service.UserService;
 
@@ -25,12 +24,6 @@ public class UserController {
     @RequestMapping(value = "/notyetimplemented", method = RequestMethod.GET)
     public String notYetImplementedPage() {
         return "notyetimplemented";
-    }
-
-    @RequestMapping(value = "/login", method = RequestMethod.GET)
-    public String loginPage(Model model) {
-        model.addAttribute("loginDTO", new LoginDTO());
-        return "login";
     }
 
     @RequestMapping(value = "/signup", method = RequestMethod.GET)
