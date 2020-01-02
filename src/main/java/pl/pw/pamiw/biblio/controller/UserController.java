@@ -33,11 +33,6 @@ public class UserController {
         return "login";
     }
 
-    @RequestMapping(value = "/login/authorize", method = RequestMethod.POST)
-    public String authorizeLogin(@ModelAttribute LoginDTO loginDTO) {
-        return notYetImplementedPage();
-    }
-
     @RequestMapping(value = "/signup", method = RequestMethod.GET)
     public String signUpPage(Model model) {
         model.addAttribute("user", new User());
