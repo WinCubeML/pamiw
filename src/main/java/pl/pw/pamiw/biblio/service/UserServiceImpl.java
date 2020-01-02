@@ -38,16 +38,18 @@ public class UserServiceImpl implements UserService {
 
     @Override
     public long count() {
-        return 0;
+        List<User> users = new ArrayList<>();
+        userRepository.findAll().forEach(users::add);
+        return users.size();
     }
 
     @Override
     public void deleteByLogin(String s) {
-
+        userRepository.delete(userRepository.findById(s).orElse(null));
     }
 
     @Override
     public void deleteAll() {
-
+        userRepository.deleteAll();
     }
 }
