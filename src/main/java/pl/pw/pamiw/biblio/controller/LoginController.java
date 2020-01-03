@@ -11,6 +11,10 @@ import pl.pw.pamiw.biblio.model.User;
 import pl.pw.pamiw.biblio.service.LoginService;
 import pl.pw.pamiw.biblio.service.UserService;
 
+import javax.servlet.http.Cookie;
+import javax.servlet.http.HttpServletRequest;
+import java.util.Arrays;
+
 @Controller
 public class LoginController {
     private UserService userService;
@@ -26,9 +30,20 @@ public class LoginController {
     }
 
     @RequestMapping(value = "/login", method = RequestMethod.GET)
-    public String loginPage(Model model) {
-        model.addAttribute("loginDTO", new LoginDTO());
-        return "login";
+    public String loginPage(Model model, HttpServletRequest request) {
+        try {
+            Cookie[] cookies = request.getCookies();
+            Cookie session = Arrays.stream(cookies).filter(cookie -> cookie.getName().equals("sessionid")).findAny().orElse(null);
+            if (null == session) {
+                System.out.println("Ciasteczka nie znaleziono");
+                throw new IllegalStateException();
+            }
+            //TODO sprawdzenie ciasteczka w redisie a potem ewentualne przekierowanie
+            return "redirect:/files";
+        } catch (IllegalStateException | NullPointerException e) {
+            model.addAttribute("loginDTO", new LoginDTO());
+            return "login";
+        }
     }
 
     @RequestMapping(value = "/login/authorize", method = RequestMethod.POST)
