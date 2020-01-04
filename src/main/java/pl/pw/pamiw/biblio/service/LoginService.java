@@ -9,5 +9,5 @@ public interface LoginService { //TODO rest of LoginService interface
 
     SessionData getSessionById(String sessionId);
 
-    void destroySession(String login);
+    void destroySession(SessionData sessionData);
 }

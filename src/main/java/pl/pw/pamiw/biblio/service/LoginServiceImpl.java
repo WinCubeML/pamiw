@@ -17,7 +17,7 @@ public class LoginServiceImpl implements LoginService { //TODO rest of LoginServ
 
     @Override
     public SessionData createSession(SessionData sessionData) {
-        return null;
+        return loginRepository.save(sessionData);
     }
 
     @Override
@@ -26,7 +26,7 @@ public class LoginServiceImpl implements LoginService { //TODO rest of LoginServ
     }
 
     @Override
-    public void destroySession(String login) {
-
+    public void destroySession(SessionData sessionData) {
+        loginRepository.delete(sessionData);
     }
 }
