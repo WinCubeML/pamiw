@@ -1,17 +1,31 @@
 <!DOCTYPE html>
-<html>
+<html lang="pl" xmlns:th="http://www.thymeleaf.org">
 <head>
     <meta charset="UTF-8">
     <title>Witaj</title>
+    <link th:href="@{/css/files.css}" rel="stylesheet" href="../static/css/files.css">
 </head>
 
 <body>
 <h1>Pliki na serwerze</h1>
 <a href="/logout">Wyloguj się</a>
+<br>Under construction<br>
+------------------------------------------<br>
+<form class="form" id="form" method="POST" enctype="multipart/form-data" th:action="@{/files/upload}">
+    <div class="file">
+        <label for="file">Załącz plik:<br></label>
+        <input type="file" id="file" name="file">
+    </div>
+    <div>
+        <button type="submit" id="upload" class="btn">Udostępnij plik</button>
+    </div>
+</form>
 <div class="container">
     <table>
         <tr>
-            <td>Under construction</td>
+            <td>Nazwa pliku</td>
+            <td>Wstawiający</td>
+            <td>Usuwanie</td>
         </tr>
     </table>
 </div>

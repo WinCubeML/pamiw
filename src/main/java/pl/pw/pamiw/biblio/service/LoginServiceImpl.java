@@ -10,7 +10,7 @@ import java.util.ArrayList;
 import java.util.List;
 
 @Service
-public class LoginServiceImpl implements LoginService { //TODO rest of LoginServiceImpl
+public class LoginServiceImpl implements LoginService {
 
     private LoginRepository loginRepository;
 

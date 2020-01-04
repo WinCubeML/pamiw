@@ -1,6 +1,8 @@
 package pl.pw.pamiw.biblio.controller;
 
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.http.HttpStatus;
+import org.springframework.http.ResponseEntity;
 import org.springframework.stereotype.Controller;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestMethod;
@@ -29,11 +31,13 @@ public class FileController { // TODO zrobić kontroler do plików
         this.fileService = fileService;
     }
 
-    @RequestMapping(value = "/files", method = RequestMethod.GET)
-    public String getFilePage(HttpServletRequest request, HttpServletResponse response) {
+    private ResponseEntity checkCookies(HttpServletRequest request, HttpServletResponse response) {
         loginService.checkExpiredSessions();
         try {
             Cookie[] cookies = request.getCookies();
+            if (null == cookies) {
+                throw new ExpiredSessionException();
+            }
             Cookie session = Arrays.stream(cookies).filter(cookie -> cookie.getName().equals("sessionid")).findAny().orElse(null);
             Cookie user = Arrays.stream(cookies).filter(cookie -> cookie.getName().equals("user")).findAny().orElse(null);
             if (null == session || null == user) {
@@ -52,12 +56,32 @@ public class FileController { // TODO zrobić kontroler do plików
                 response.addCookie(user);
                 throw new ForbiddenCookieException();
             }
-        } catch (ExpiredSessionException e) {
-            return "expired";
-        } catch (ForbiddenCookieException e) {
+        } catch (ExpiredSessionException | ForbiddenCookieException e) {
+            return new ResponseEntity(HttpStatus.FORBIDDEN);
+        }
+        return new ResponseEntity(HttpStatus.OK);
+    }
+
+    @RequestMapping(value = "/files", method = RequestMethod.GET)
+    public String getFilePage(HttpServletRequest request, HttpServletResponse response) {
+        ResponseEntity responseEntity = checkCookies(request, response);
+        if (responseEntity.getStatusCode().equals(HttpStatus.OK)) {
+            //TODO obsługa JWT listowania
+            return "files";
+        } else {
             return "forbidden";
         }
-        //TODO obsługa plików
-        return "files";
+    }
+
+    @RequestMapping(value = "/files/upload", method = RequestMethod.POST)
+    public String uploadFile(HttpServletRequest request, HttpServletResponse response) {
+        ResponseEntity responseEntity = checkCookies(request, response);
+        if (responseEntity.getStatusCode().equals(HttpStatus.OK)) {
+            //TODO obsługa JWT dodawania
+            //TODO obsługa dodawania plików
+            return "redirect:/files";
+        } else {
+            return "forbidden";
+        }
     }
 }
