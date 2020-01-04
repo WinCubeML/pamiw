@@ -11,6 +11,7 @@ import org.springframework.data.redis.core.RedisHash;
 @Setter
 @NoArgsConstructor
 public class User {
+
     @Id
     private String login;
 
@@ -21,4 +22,5 @@ public class User {
     private String surname;
 
     private String pesel;
+
 }

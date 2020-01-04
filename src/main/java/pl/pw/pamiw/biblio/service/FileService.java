@@ -9,9 +9,9 @@ import java.util.List;
 public interface FileService { //TODO interfejs serwisu plików
     FileDTO uploadFile(FileDTO file);
 
-    List<FileDTO> listFiles();
+    List<FileDTO> listAllFiles();
 
-    FileDTO downloadFile(FileDTO file);
+    byte[] downloadFile(FileDTO file);
 
     void deleteFile(FileDTO file); // TODO czy na pewno przy delete będzie fileDTO?
 }

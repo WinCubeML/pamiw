@@ -11,8 +11,12 @@ import org.springframework.data.redis.core.RedisHash;
 @Setter
 @NoArgsConstructor
 public class SessionData {
+
     @Id
     private String sessionId;
+
     private String login;
+
     private String expiryDate;
+
 }

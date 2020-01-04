@@ -13,12 +13,12 @@ public class FileServiceImpl implements FileService { //TODO implementacja serwi
     }
 
     @Override
-    public List<FileDTO> listFiles() {
+    public List<FileDTO> listAllFiles() {
         return null;
     }
 
     @Override
-    public FileDTO downloadFile(FileDTO file) {
+    public byte[] downloadFile(FileDTO file) {
         return null;
     }
 
