@@ -34,7 +34,7 @@ public class LoginController {
     }
 
     @RequestMapping(value = "/login", method = RequestMethod.GET)
-    public String loginPage(Model model, HttpServletRequest request) {
+    public String loginPage(Model model, HttpServletRequest request, HttpServletResponse response) {
         loginService.checkExpiredSessions();
         try {
             Cookie[] cookies = request.getCookies();
@@ -51,9 +51,12 @@ public class LoginController {
                 return "redirect:/files";
             } else {
                 System.out.println("Ciasteczka nie znaleziono w Redis lub login nie pokrywa się z danymi sesji");
-                loginService.destroySession(checkSession);
+                if (null != checkSession)
+                    loginService.destroySession(checkSession);
                 session.setMaxAge(0);
                 user.setMaxAge(0);
+                response.addCookie(session);
+                response.addCookie(user);
                 throw new IllegalStateException();
             }
         } catch (IllegalStateException | NullPointerException e) {
