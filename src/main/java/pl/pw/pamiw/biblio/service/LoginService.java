@@ -10,4 +10,6 @@ public interface LoginService { //TODO rest of LoginService interface
     SessionData getSessionById(String sessionId);
 
     void destroySession(SessionData sessionData);
+
+    void checkExpiredSessions();
 }
