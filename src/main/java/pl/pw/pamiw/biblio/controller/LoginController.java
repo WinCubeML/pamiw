@@ -39,12 +39,23 @@ public class LoginController {
         try {
             Cookie[] cookies = request.getCookies();
             Cookie session = Arrays.stream(cookies).filter(cookie -> cookie.getName().equals("sessionid")).findAny().orElse(null);
-            if (null == session) {
+            Cookie user = Arrays.stream(cookies).filter(cookie -> cookie.getName().equals("user")).findAny().orElse(null);
+            if (null == session || null == user) {
                 System.out.println("Ciasteczka nie znaleziono");
                 throw new IllegalStateException();
             }
-            //TODO sprawdzenie ciasteczka w redisie a potem ewentualne przekierowanie
-            return "redirect:/files";
+
+            SessionData checkSession = loginService.getSessionById(session.getValue());
+            if (null != checkSession && checkSession.getLogin().equals(user.getValue())) {
+                System.out.println("Ciasteczko znalezione w Redis");
+                return "redirect:/files";
+            } else {
+                System.out.println("Ciasteczka nie znaleziono w Redis lub login nie pokrywa się z danymi sesji");
+                loginService.destroySession(checkSession);
+                session.setMaxAge(0);
+                user.setMaxAge(0);
+                throw new IllegalStateException();
+            }
         } catch (IllegalStateException | NullPointerException e) {
             model.addAttribute("loginDTO", new LoginDTO());
             return "login";
@@ -83,8 +94,8 @@ public class LoginController {
             System.out.println("Zalogowano");
             return "redirect:/files";
         } else {
-            System.out.println("Nie zalogowano bo mnie nie ma albo coś innego");
+            System.out.println("Nie udało się zalogować");
+            return "badlogin";
         }
-        return pageController.notYetImplementedPage();
     }
 }
