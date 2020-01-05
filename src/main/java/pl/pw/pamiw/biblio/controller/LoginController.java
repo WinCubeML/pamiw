@@ -73,7 +73,7 @@ public class LoginController {
         StringBuilder sb = new StringBuilder();
         sb.append(loginDTO.getPassword()).append(',').append(loginDTO.getPassword()); // TODO Wtf ten bypass
         if (null != user && user.getPassword().equals(sb.toString())) {
-            int cookieMaxAge = 3 * 60;
+            int cookieMaxAge = 5 * 60;
 
             Cookie userCookie = new Cookie("user", loginDTO.getLogin());
             userCookie.setMaxAge(cookieMaxAge);

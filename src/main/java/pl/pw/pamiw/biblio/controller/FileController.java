@@ -26,7 +26,7 @@ import java.io.IOException;
 import java.util.Arrays;
 
 @Controller
-public class FileController { // TODO zrobić kontroler do plików
+public class FileController {
     private LoginService loginService;
     private FileService fileService;
 
