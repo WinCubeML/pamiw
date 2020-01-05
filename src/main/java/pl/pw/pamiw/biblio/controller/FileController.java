@@ -67,6 +67,7 @@ public class FileController { // TODO zrobić kontroler do plików
         ResponseEntity responseEntity = checkCookies(request, response);
         if (responseEntity.getStatusCode().equals(HttpStatus.OK)) {
             //TODO obsługa JWT listowania
+            //TODO wyświetlanie listowania plików
             return "files";
         } else {
             return "forbidden";

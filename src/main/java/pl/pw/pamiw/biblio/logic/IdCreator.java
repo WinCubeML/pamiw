@@ -2,11 +2,12 @@ package pl.pw.pamiw.biblio.logic;
 
 import java.util.Random;
 
-public class Session {
-    public static String createSessionIdForCookie() {
+public class IdCreator {
+
+    public static String createId(int idLength) {
         StringBuilder sb = new StringBuilder();
         Random r = new Random();
-        for (int i = 0; i < 24; i++) {
+        for (int i = 0; i < idLength; i++) {
             int n = r.nextInt(16);
             if (n < 10)
                 sb.append(n);

@@ -6,7 +6,7 @@ import org.springframework.boot.autoconfigure.SpringBootApplication;
 
 @Log
 @SpringBootApplication(scanBasePackages = {
-        "pl.pw.pamiw.biblio.controller", "pl.pw.pamiw.biblio.model", "pl.pw.pamiw.biblio.repositories", "pl.pw.pamiw.biblio.service"
+        "pl.pw.pamiw.biblio.controller", "pl.pw.pamiw.biblio.model", "pl.pw.pamiw.biblio.repositories", "pl.pw.pamiw.biblio.service", "pl.pw.pamiw.biblio.logic"
 })
 public class BiblioApplication {
 

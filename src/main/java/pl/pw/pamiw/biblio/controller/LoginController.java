@@ -6,7 +6,7 @@ import org.springframework.ui.Model;
 import org.springframework.web.bind.annotation.ModelAttribute;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestMethod;
-import pl.pw.pamiw.biblio.logic.Session;
+import pl.pw.pamiw.biblio.logic.IdCreator;
 import pl.pw.pamiw.biblio.model.LoginDTO;
 import pl.pw.pamiw.biblio.model.SessionData;
 import pl.pw.pamiw.biblio.model.User;
@@ -81,7 +81,7 @@ public class LoginController {
             userCookie.setPath("/");
             response.addCookie(userCookie);
 
-            String sessionId = Session.createSessionIdForCookie();
+            String sessionId = IdCreator.createId(24);
             Cookie sessionCookie = new Cookie("sessionid", sessionId);
             sessionCookie.setMaxAge(cookieMaxAge);
             sessionCookie.setHttpOnly(true);

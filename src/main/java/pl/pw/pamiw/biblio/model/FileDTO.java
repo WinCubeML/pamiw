@@ -11,8 +11,6 @@ import org.springframework.data.redis.core.RedisHash;
 public class FileDTO {
 
     @Id
-    private String id;
-
     private String fileName;
 
     private String authorName;

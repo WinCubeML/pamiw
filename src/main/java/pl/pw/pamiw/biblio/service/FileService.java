@@ -1,17 +1,21 @@
 package pl.pw.pamiw.biblio.service;
 
+import org.springframework.lang.NonNull;
 import org.springframework.stereotype.Service;
+import org.springframework.web.multipart.MultipartFile;
 import pl.pw.pamiw.biblio.model.FileDTO;
+import pl.pw.pamiw.biblio.model.UserForFileDTO;
 
+import java.io.IOException;
 import java.util.List;
 
 @Service
-public interface FileService { //TODO interfejs serwisu plików
-    FileDTO uploadFile(FileDTO file);
+public interface FileService {
+    void uploadFile(UserForFileDTO user, @NonNull MultipartFile file) throws IOException;
 
     List<FileDTO> listAllFiles();
 
     byte[] downloadFile(FileDTO file);
 
-    void deleteFile(FileDTO file); // TODO czy na pewno przy delete będzie fileDTO?
+    void deleteFile(String fileId);
 }
