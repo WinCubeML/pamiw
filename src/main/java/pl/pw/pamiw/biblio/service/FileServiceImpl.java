@@ -10,6 +10,7 @@ import pl.pw.pamiw.biblio.repositories.FileRepository;
 
 import java.io.File;
 import java.io.IOException;
+import java.nio.file.Files;
 import java.nio.file.Path;
 import java.nio.file.Paths;
 import java.util.ArrayList;
@@ -62,12 +63,18 @@ public class FileServiceImpl implements FileService { //TODO implementacja serwi
     }
 
     @Override
-    public byte[] downloadFile(FileDTO file) {
-        return null;
+    public byte[] downloadFile(String fileName) throws IllegalAccessException, IOException {
+        String path = Paths.get(FILE_DIR).toAbsolutePath().toString();
+        Path filePath = Paths.get(path, fileName);
+        File file = new File(String.valueOf(filePath));
+        if (!file.exists()) {
+            throw new IllegalAccessException("Brak dostępu do pliku");
+        }
+        return Files.readAllBytes(file.toPath());
     }
 
     @Override
-    public void deleteFile(String fileId) {
+    public void deleteFile(String fileName) {
 
     }
 }

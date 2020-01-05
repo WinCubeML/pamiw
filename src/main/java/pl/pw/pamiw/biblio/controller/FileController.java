@@ -2,6 +2,7 @@ package pl.pw.pamiw.biblio.controller;
 
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpEntity;
+import org.springframework.http.HttpHeaders;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.stereotype.Controller;
@@ -101,6 +102,20 @@ public class FileController { // TODO zrobić kontroler do plików
 
     @RequestMapping(value = "/files/download/{fileName}", method = RequestMethod.GET)
     public HttpEntity<byte[]> downloadFile(@PathVariable("fileName") String fileName) {
-        return null;
+        byte[] file;
+        try {
+            file = fileService.downloadFile(fileName);
+        } catch (IllegalAccessException e) {
+            e.printStackTrace();
+            return new HttpEntity(HttpStatus.BAD_REQUEST);
+        } catch (IOException e) {
+            e.printStackTrace();
+            return new HttpEntity(HttpStatus.INTERNAL_SERVER_ERROR);
+        }
+
+        HttpHeaders headers = new HttpHeaders();
+        headers.set(HttpHeaders.CONTENT_DISPOSITION, "attachment; filename=" + fileName.replace(" ", "_"));
+        headers.setContentLength(file.length);
+        return new HttpEntity<>(file, headers);
     }
 }
