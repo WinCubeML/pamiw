@@ -27,6 +27,13 @@
             <td>Wstawiający</td>
             <td>Usuwanie (od części III)</td>
         </tr>
+        <th:block th:each="file : ${files}">
+            <tr>
+                <td th:text="${file.getFileName()}"></td>
+                <td th:text="${file.getAuthorName() + ' ' + file.getAuthorSurname()}"></td>
+                <td>TODO</td>
+            </tr>
+        </th:block>
     </table>
 </div>
 </body>
