@@ -4,6 +4,8 @@ import org.springframework.stereotype.Service;
 import pl.pw.pamiw.biblio.model.Bibliography;
 import pl.pw.pamiw.biblio.model.FileDTO;
 
+import java.util.List;
+
 @Service
 public interface BibliographyService {
     void createBibliography(Bibliography bibliography);
@@ -14,7 +16,7 @@ public interface BibliographyService {
 
     void deleteFileFromBibliography(Bibliography bibliography, FileDTO file);
 
-    void listBibliographies();
+    List<Bibliography> listBibliographies();
 
     void deleteBibliography(Bibliography bibliography);
 }

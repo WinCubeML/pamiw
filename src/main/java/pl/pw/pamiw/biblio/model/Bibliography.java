@@ -5,8 +5,6 @@ import lombok.NoArgsConstructor;
 import org.springframework.data.annotation.Id;
 import org.springframework.data.redis.core.RedisHash;
 
-import javax.validation.constraints.Max;
-import javax.validation.constraints.Min;
 import java.util.List;
 
 @RedisHash("bibliography")
@@ -20,12 +18,9 @@ public class Bibliography {
 
     private String publicationAuthor;
 
-    @Min(0)
-    private int publicationPageCount;
+    private int publicationPageCount = 0;
 
-    @Min(-10000)
-    @Max(3000)
-    private int publicationYear;
+    private int publicationYear = 2020;
 
     private List<String> files;
 }

@@ -12,6 +12,28 @@
 <a href="/files">Przejdź do widoku plików</a>
 <br>
 ------------------------------------------<br>
+<div class="container">
+    <table>
+        <tr>
+            <td><b>Nazwa publikacji</b></td>
+            <td><b>Autor publikacji</b></td>
+            <td><b>Liczba stron publikacji</b></td>
+            <td><b>Rok wydania publikacji</b></td>
+            <td><b>Powiązane pliki</b></td>
+            <td><b><i>Edycja publikacji</i></b></td>
+            <td><b><i>Usuń publikację</i></b></td>
+        </tr>
+        <th:block th:each="bib : ${bibs}">
+            <td th:text="${bib.getPublicationTitle()}"></td>
+            <td th:text="${bib.getPublicationAuthor()}"></td>
+            <td th:text="${bib.getPublicationPageCount()}"></td>
+            <td th:text="${bib.getPublicationYear()}"></td>
+            <td>TODO</td>
+            <td>TODO</td>
+            <td>TODO</td>
+        </th:block>
+    </table>
+</div>
 <!--<form class="form" id="form" method="POST" enctype="multipart/form-data" th:action="@{/files/upload}">-->
 <!--    <div class="file">-->
 <!--        <label for="file">Załącz plik:<br></label>-->
