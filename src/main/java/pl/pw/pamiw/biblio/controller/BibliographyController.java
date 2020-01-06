@@ -107,51 +107,142 @@ public class BibliographyController {
 
     @RequestMapping(value = "/pubs/create", method = RequestMethod.GET)
     public String showCreatePublicationPage(HttpServletRequest request, HttpServletResponse response, Model model) {
-        model.addAttribute("bibliography", new Bibliography());
-        return "addpub";
+        ResponseEntity responseEntity = checkCookies(request, response);
+        if (responseEntity.getStatusCode().equals(HttpStatus.OK)) {
+            Cookie[] cookies = request.getCookies();
+            Cookie user = Arrays.stream(cookies).filter(cookie -> cookie.getName().equals("user")).findAny().orElse(null);
+
+            if (jwtService.canIUpload(createToken(user.getValue(), "list"), user.getValue())) {
+                model.addAttribute("bibliography", new Bibliography());
+                return "addpub";
+            } else {
+                System.out.println("Nie udało się autoryzować JWT");
+                return "forbidden";
+            }
+        } else {
+            return "forbidden";
+        }
     }
 
     @RequestMapping(value = "/pubs/create", method = RequestMethod.POST)
     public String createPublication(HttpServletRequest request, HttpServletResponse response, @ModelAttribute Bibliography bibliography) {
-        bibliographyService.createBibliography(bibliography);
-        return "redirect:/pubs";
+        ResponseEntity responseEntity = checkCookies(request, response);
+        if (responseEntity.getStatusCode().equals(HttpStatus.OK)) {
+            Cookie[] cookies = request.getCookies();
+            Cookie user = Arrays.stream(cookies).filter(cookie -> cookie.getName().equals("user")).findAny().orElse(null);
+
+            if (jwtService.canIUpload(createToken(user.getValue(), "list"), user.getValue())) {
+                bibliographyService.createBibliography(bibliography);
+                return "redirect:/pubs";
+            } else {
+                System.out.println("Nie udało się autoryzować JWT");
+                return "forbidden";
+            }
+        } else {
+            return "forbidden";
+        }
     }
 
     @RequestMapping(value = "/pubs/attach/{publicationId}", method = RequestMethod.GET)
     public String attachFileToPublication(HttpServletRequest request, HttpServletResponse response, @PathVariable String publicationId, Model model) {
-        List<FileDTO> files = fileService.listAllFiles();
-        List<String> names = new ArrayList<>();
-        for (FileDTO file : files) {
-            names.add(file.getFileName());
+        ResponseEntity responseEntity = checkCookies(request, response);
+        if (responseEntity.getStatusCode().equals(HttpStatus.OK)) {
+            Cookie[] cookies = request.getCookies();
+            Cookie user = Arrays.stream(cookies).filter(cookie -> cookie.getName().equals("user")).findAny().orElse(null);
+
+            if (jwtService.canIUpload(createToken(user.getValue(), "list"), user.getValue())) {
+                List<FileDTO> files = fileService.listAllFiles();
+                List<String> names = new ArrayList<>();
+                for (FileDTO file : files) {
+                    names.add(file.getFileName());
+                }
+                model.addAttribute("fileNames", names);
+                model.addAttribute("pubId", publicationId);
+                return "attachtopub";
+            } else {
+                System.out.println("Nie udało się autoryzować JWT");
+                return "forbidden";
+            }
+        } else {
+            return "forbidden";
         }
-        model.addAttribute("fileNames", names);
-        model.addAttribute("pubId", publicationId);
-        return "attachtopub";
     }
 
     @RequestMapping(value = "/pubs/attach/{publicationId}/{filename}", method = RequestMethod.GET)
     public String attachFile(HttpServletRequest request, HttpServletResponse response, @PathVariable String publicationId, @PathVariable String filename) {
-        bibliographyService.addFileToBibliography(publicationId, filename);
-        return "redirect:/pubs";
+        ResponseEntity responseEntity = checkCookies(request, response);
+        if (responseEntity.getStatusCode().equals(HttpStatus.OK)) {
+            Cookie[] cookies = request.getCookies();
+            Cookie user = Arrays.stream(cookies).filter(cookie -> cookie.getName().equals("user")).findAny().orElse(null);
+
+            if (jwtService.canIUpload(createToken(user.getValue(), "list"), user.getValue())) {
+                bibliographyService.addFileToBibliography(publicationId, filename);
+                return "redirect:/pubs";
+            } else {
+                System.out.println("Nie udało się autoryzować JWT");
+                return "forbidden";
+            }
+        } else {
+            return "forbidden";
+        }
     }
 
     @RequestMapping(value = "/pubs/detach/{publicationId}", method = RequestMethod.GET)
     public String detachFileFromPublication(HttpServletRequest request, HttpServletResponse response, @PathVariable String publicationId, Model model) {
-        List<String> names = bibliographyService.getBibliographyFromId(publicationId).getFiles();
-        model.addAttribute("fileNames", names);
-        model.addAttribute("pubId", publicationId);
-        return "detachfrompub";
+        ResponseEntity responseEntity = checkCookies(request, response);
+        if (responseEntity.getStatusCode().equals(HttpStatus.OK)) {
+            Cookie[] cookies = request.getCookies();
+            Cookie user = Arrays.stream(cookies).filter(cookie -> cookie.getName().equals("user")).findAny().orElse(null);
+
+            if (jwtService.canIDelete(createToken(user.getValue(), "list"), user.getValue())) {
+                List<String> names = bibliographyService.getBibliographyFromId(publicationId).getFiles();
+                model.addAttribute("fileNames", names);
+                model.addAttribute("pubId", publicationId);
+                return "detachfrompub";
+            } else {
+                System.out.println("Nie udało się autoryzować JWT");
+                return "forbidden";
+            }
+        } else {
+            return "forbidden";
+        }
     }
 
     @RequestMapping(value = "/pubs/detach/{publicationId}/{filename}", method = RequestMethod.GET)
     public String detachFile(HttpServletRequest request, HttpServletResponse response, @PathVariable String publicationId, @PathVariable String filename) {
-        bibliographyService.deleteFileFromBibliography(publicationId, filename);
-        return "redirect:/pubs";
+        ResponseEntity responseEntity = checkCookies(request, response);
+        if (responseEntity.getStatusCode().equals(HttpStatus.OK)) {
+            Cookie[] cookies = request.getCookies();
+            Cookie user = Arrays.stream(cookies).filter(cookie -> cookie.getName().equals("user")).findAny().orElse(null);
+
+            if (jwtService.canIDelete(createToken(user.getValue(), "list"), user.getValue())) {
+                bibliographyService.deleteFileFromBibliography(publicationId, filename);
+                return "redirect:/pubs";
+            } else {
+                System.out.println("Nie udało się autoryzować JWT");
+                return "forbidden";
+            }
+        } else {
+            return "forbidden";
+        }
     }
 
     @RequestMapping(value = "/pubs/delete/{publicationId}", method = RequestMethod.GET)
     public String deletePublication(HttpServletRequest request, HttpServletResponse response, @PathVariable String publicationId) {
-        bibliographyService.deleteBibliography(publicationId);
-        return "redirect:/pubs";
+        ResponseEntity responseEntity = checkCookies(request, response);
+        if (responseEntity.getStatusCode().equals(HttpStatus.OK)) {
+            Cookie[] cookies = request.getCookies();
+            Cookie user = Arrays.stream(cookies).filter(cookie -> cookie.getName().equals("user")).findAny().orElse(null);
+
+            if (jwtService.canIDelete(createToken(user.getValue(), "list"), user.getValue())) {
+                bibliographyService.deleteBibliography(publicationId);
+                return "redirect:/pubs";
+            } else {
+                System.out.println("Nie udało się autoryzować JWT");
+                return "forbidden";
+            }
+        } else {
+            return "forbidden";
+        }
     }
 }
