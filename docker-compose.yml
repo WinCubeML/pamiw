@@ -3,6 +3,8 @@ services:
   web:
     build:
       ./
+    ports:
+      - "8080:8080"
     environment:
       - REDIS_NAME=redis
       - APP_URL=http://localhost:8080
