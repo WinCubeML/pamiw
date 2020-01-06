@@ -8,10 +8,12 @@ import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
+import org.springframework.web.bind.annotation.ModelAttribute;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestMethod;
 import pl.pw.pamiw.biblio.exceptions.ExpiredSessionException;
 import pl.pw.pamiw.biblio.exceptions.ForbiddenCookieException;
+import pl.pw.pamiw.biblio.model.Bibliography;
 import pl.pw.pamiw.biblio.model.SessionData;
 import pl.pw.pamiw.biblio.service.BibliographyService;
 import pl.pw.pamiw.biblio.service.FileService;
@@ -97,5 +99,17 @@ public class BibliographyController {
         } else {
             return "forbidden";
         }
+    }
+
+    @RequestMapping(value = "/pubs/create", method = RequestMethod.GET)
+    public String showCreatePublicationPage(Model model) {
+        model.addAttribute("bibliography", new Bibliography());
+        return "addpub";
+    }
+
+    @RequestMapping(value = "/pubs/create", method = RequestMethod.POST)
+    public String createPublication(@ModelAttribute Bibliography bibliography) {
+        bibliographyService.createBibliography(bibliography);
+        return "redirect:/pubs";
     }
 }

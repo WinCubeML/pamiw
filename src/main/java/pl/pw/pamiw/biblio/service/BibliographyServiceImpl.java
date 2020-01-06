@@ -39,11 +39,6 @@ public class BibliographyServiceImpl implements BibliographyService {
     }
 
     @Override
-    public void editBibliography(Bibliography oldB, Bibliography newB) {
-
-    }
-
-    @Override
     public void addFileToBibliography(Bibliography bibliography, FileDTO file) {
 
     }

@@ -10,8 +10,6 @@ import java.util.List;
 public interface BibliographyService {
     void createBibliography(Bibliography bibliography);
 
-    void editBibliography(Bibliography oldB, Bibliography newB);
-
     void addFileToBibliography(Bibliography bibliography, FileDTO file);
 
     void deleteFileFromBibliography(Bibliography bibliography, FileDTO file);
