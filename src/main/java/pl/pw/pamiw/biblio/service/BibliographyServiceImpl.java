@@ -21,12 +21,17 @@ public class BibliographyServiceImpl implements BibliographyService {
     }
 
     @Override
-    public void addToBibliography(Bibliography bibliography, FileDTO file) {
+    public void editBibliography(Bibliography oldB, Bibliography newB) {
 
     }
 
     @Override
-    public void deleteFromBibliography(Bibliography bibliography, FileDTO file) {
+    public void addFileToBibliography(Bibliography bibliography, FileDTO file) {
+
+    }
+
+    @Override
+    public void deleteFileFromBibliography(Bibliography bibliography, FileDTO file) {
 
     }
 

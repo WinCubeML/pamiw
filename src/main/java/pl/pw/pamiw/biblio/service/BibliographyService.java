@@ -8,9 +8,11 @@ import pl.pw.pamiw.biblio.model.FileDTO;
 public interface BibliographyService {
     void createBibliography(Bibliography bibliography);
 
-    void addToBibliography(Bibliography bibliography, FileDTO file);
+    void editBibliography(Bibliography oldB, Bibliography newB);
 
-    void deleteFromBibliography(Bibliography bibliography, FileDTO file);
+    void addFileToBibliography(Bibliography bibliography, FileDTO file);
+
+    void deleteFileFromBibliography(Bibliography bibliography, FileDTO file);
 
     void listBibliographies();
 
