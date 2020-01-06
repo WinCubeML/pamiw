@@ -18,10 +18,12 @@ import org.springframework.web.multipart.MultipartFile;
 import pl.pw.pamiw.biblio.exceptions.ExpiredSessionException;
 import pl.pw.pamiw.biblio.exceptions.ForbiddenCookieException;
 import pl.pw.pamiw.biblio.model.SessionData;
+import pl.pw.pamiw.biblio.model.User;
 import pl.pw.pamiw.biblio.model.UserForFileDTO;
 import pl.pw.pamiw.biblio.service.FileService;
 import pl.pw.pamiw.biblio.service.JWTService;
 import pl.pw.pamiw.biblio.service.LoginService;
+import pl.pw.pamiw.biblio.service.UserService;
 
 import javax.servlet.http.Cookie;
 import javax.servlet.http.HttpServletRequest;
@@ -34,6 +36,7 @@ public class FileController {
     @Value("${jwt.secret}")
     private String JWT_SECRET;
 
+    private UserService userService;
     private LoginService loginService;
     private FileService fileService;
     private JWTService jwtService;
@@ -42,7 +45,8 @@ public class FileController {
     PageController pageController;
 
     @Autowired
-    public void setFileServices(LoginService loginService, FileService fileService, JWTService jwtService) {
+    public void setFileServices(UserService userService, LoginService loginService, FileService fileService, JWTService jwtService) {
+        this.userService = userService;
         this.loginService = loginService;
         this.fileService = fileService;
         this.jwtService = jwtService;
@@ -111,7 +115,8 @@ public class FileController {
             Cookie user = Arrays.stream(cookies).filter(cookie -> cookie.getName().equals("user")).findAny().orElse(null);
             if (jwtService.canIUpload(createToken(user.getValue(), "upload"), user.getValue())) {
                 try {
-                    fileService.uploadFile(new UserForFileDTO("test", "test"), file);
+                    User userDTO = userService.findByLogin(user.getValue());
+                    fileService.uploadFile(new UserForFileDTO(userDTO.getName(), userDTO.getSurname()), file);
                 } catch (IOException e) {
                     System.out.println("error");
                     e.printStackTrace();

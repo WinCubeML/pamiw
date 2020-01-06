@@ -8,8 +8,9 @@
 
 <body>
 <h1>Pliki na serwerze</h1>
-<a href="/logout">Wyloguj się</a>
-<br>Under construction<br>
+<a href="/logout">Wyloguj się</a><br>
+<a href="/pubs">Przejdź do widoku publikacji</a>
+<br>
 ------------------------------------------<br>
 <form class="form" id="form" method="POST" enctype="multipart/form-data" th:action="@{/files/upload}">
     <div class="file">
@@ -23,10 +24,10 @@
 <div class="container">
     <table>
         <tr>
-            <td>Nazwa pliku</td>
-            <td>Wstawiający</td>
-            <td>Pobierz</td>
-            <td>Usuwanie (od części III)</td>
+            <td><b>Nazwa pliku</b></td>
+            <td><b>Wstawiający</b></td>
+            <td><b>Pobierz</b></td>
+            <td><b>Usuwanie (od części III)</b></td>
         </tr>
         <th:block th:each="file : ${files}">
             <tr>
