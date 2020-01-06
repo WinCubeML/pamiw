@@ -24,11 +24,18 @@ public class BibliographyServiceImpl implements BibliographyService {
         temp.setBibliographyId(bibliography.getBibliographyId());
         temp.setPublicationTitle(bibliography.getPublicationTitle());
         temp.setPublicationAuthor(bibliography.getPublicationAuthor());
-        if (isValidBibliography(bibliography)) {
+        if (isValidPageCount(bibliography)) {
             temp.setPublicationPageCount(bibliography.getPublicationPageCount());
-            temp.setPublicationYear(bibliography.getPublicationYear());
+        } else {
+            temp.setPublicationPageCount(0);
         }
-        bibliographyRepository.save(bibliography);
+        if (isValidYear(bibliography)) {
+            temp.setPublicationYear(bibliography.getPublicationYear());
+        } else {
+            temp.setPublicationYear(0);
+        }
+        temp.setFiles(new ArrayList<>());
+        bibliographyRepository.save(temp);
     }
 
     @Override
@@ -58,11 +65,12 @@ public class BibliographyServiceImpl implements BibliographyService {
 
     }
 
-    private boolean isValidBibliography(Bibliography bibliography) {
-        if (bibliography.getPublicationPageCount() < 0)
-            return false;
-        if (bibliography.getPublicationYear() < -3000 || bibliography.getPublicationYear() > 3000)
-            return false;
-        return true;
+    private boolean isValidPageCount(Bibliography bibliography) {
+        return bibliography.getPublicationPageCount() > 0;
+    }
+
+    private boolean isValidYear(Bibliography bibliography) {
+        return bibliography.getPublicationYear() >= -3000
+            && bibliography.getPublicationYear() <= 3000;
     }
 }
