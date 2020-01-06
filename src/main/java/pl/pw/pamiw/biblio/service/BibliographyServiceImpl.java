@@ -3,11 +3,11 @@ package pl.pw.pamiw.biblio.service;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 import pl.pw.pamiw.biblio.model.Bibliography;
-import pl.pw.pamiw.biblio.model.FileDTO;
 import pl.pw.pamiw.biblio.repositories.BibliographyRepository;
 
 import java.util.ArrayList;
 import java.util.List;
+import java.util.stream.Collectors;
 
 @Service
 public class BibliographyServiceImpl implements BibliographyService {
@@ -50,8 +50,21 @@ public class BibliographyServiceImpl implements BibliographyService {
     }
 
     @Override
-    public void deleteFileFromBibliography(Bibliography bibliography, FileDTO file) {
+    public Bibliography getBibliographyFromId(String bibliographyId) {
+        return bibliographyRepository.findById(bibliographyId).orElse(null);
+    }
 
+    @Override
+    public void deleteFileFromBibliography(String bibliographyId, String fileName) {
+        Bibliography bib = bibliographyRepository.findById(bibliographyId).orElse(null);
+        bibliographyRepository.delete(bib);
+        if (null == bib.getFiles()) {
+            bib.setFiles(new ArrayList<>());
+        }
+        List<String> result = new ArrayList<>();
+        result = bib.getFiles().stream().filter(name -> !name.equals(fileName)).collect(Collectors.toList());
+        bib.setFiles(result);
+        bibliographyRepository.save(bib);
     }
 
     @Override

@@ -13,7 +13,8 @@ public class RedisConfiguration {
     @Bean
     public LettuceConnectionFactory redisConnectionFactory() {
         RedisStandaloneConfiguration redisConf = new RedisStandaloneConfiguration();
-        redisConf.setHostName("redis");
+        redisConf.setHostName("localhost");
+//        redisConf.setHostName("redis");
 
         return new LettuceConnectionFactory(redisConf);
     }

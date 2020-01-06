@@ -83,7 +83,7 @@ public class BibliographyController {
 
     private String createToken(String login, String claimToken) {
         return JWT.create().withIssuer("biblioapp").withClaim("user", login)
-            .withClaim(claimToken, true).sign(Algorithm.HMAC256(JWT_SECRET.getBytes()));
+                .withClaim(claimToken, true).sign(Algorithm.HMAC256(JWT_SECRET.getBytes()));
     }
 
     @RequestMapping(value = "/pubs", method = RequestMethod.GET)
@@ -119,7 +119,6 @@ public class BibliographyController {
 
     @RequestMapping(value = "/pubs/attach/{publicationId}", method = RequestMethod.GET)
     public String attachFileToPublication(@PathVariable String publicationId, Model model) {
-        System.out.println(publicationId);
         List<FileDTO> files = fileService.listAllFiles();
         List<String> names = new ArrayList<>();
         for (FileDTO file : files) {
@@ -133,6 +132,20 @@ public class BibliographyController {
     @RequestMapping(value = "/pubs/attach/{publicationId}/{filename}", method = RequestMethod.GET)
     public String attachFile(@PathVariable String publicationId, @PathVariable String filename) {
         bibliographyService.addFileToBibliography(publicationId, filename);
+        return "redirect:/pubs";
+    }
+
+    @RequestMapping(value = "/pubs/detach/{publicationId}", method = RequestMethod.GET)
+    public String detachFileFromPublication(@PathVariable String publicationId, Model model) {
+        List<String> names = bibliographyService.getBibliographyFromId(publicationId).getFiles();
+        model.addAttribute("fileNames", names);
+        model.addAttribute("pubId", publicationId);
+        return "detachfrompub";
+    }
+
+    @RequestMapping(value = "/pubs/detach/{publicationId}/{filename}", method = RequestMethod.GET)
+    public String detachFile(@PathVariable String publicationId, @PathVariable String filename) {
+        bibliographyService.deleteFileFromBibliography(publicationId, filename);
         return "redirect:/pubs";
     }
 }

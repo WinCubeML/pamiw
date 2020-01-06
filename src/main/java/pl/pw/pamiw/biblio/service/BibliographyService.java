@@ -2,7 +2,6 @@ package pl.pw.pamiw.biblio.service;
 
 import org.springframework.stereotype.Service;
 import pl.pw.pamiw.biblio.model.Bibliography;
-import pl.pw.pamiw.biblio.model.FileDTO;
 
 import java.util.List;
 
@@ -12,7 +11,9 @@ public interface BibliographyService {
 
     void addFileToBibliography(String bibliographyId, String fileName);
 
-    void deleteFileFromBibliography(Bibliography bibliography, FileDTO file);
+    Bibliography getBibliographyFromId(String bibliographyId);
+
+    void deleteFileFromBibliography(String bibliographyId, String fileName);
 
     List<Bibliography> listBibliographies();
 
