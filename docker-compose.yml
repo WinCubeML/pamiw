@@ -1,15 +1,12 @@
 version: "3"
 services:
   web:
-    build:
-      ./
+    build: ./
     ports:
       - "8080:8080"
-    environment:
-      - REDIS_NAME=redis
-      - APP_URL=http://localhost:8080
     depends_on:
       - redis
 
   redis:
     image: redis
+    command: ["redis-server", "--bind", "redis", "--port", "6379"]
