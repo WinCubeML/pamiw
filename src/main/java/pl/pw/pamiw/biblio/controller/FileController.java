@@ -1,6 +1,9 @@
 package pl.pw.pamiw.biblio.controller;
 
+import com.auth0.jwt.JWT;
+import com.auth0.jwt.algorithms.Algorithm;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.beans.factory.annotation.Value;
 import org.springframework.http.HttpEntity;
 import org.springframework.http.HttpHeaders;
 import org.springframework.http.HttpStatus;
@@ -17,6 +20,7 @@ import pl.pw.pamiw.biblio.exceptions.ForbiddenCookieException;
 import pl.pw.pamiw.biblio.model.SessionData;
 import pl.pw.pamiw.biblio.model.UserForFileDTO;
 import pl.pw.pamiw.biblio.service.FileService;
+import pl.pw.pamiw.biblio.service.JWTService;
 import pl.pw.pamiw.biblio.service.LoginService;
 
 import javax.servlet.http.Cookie;
@@ -27,16 +31,21 @@ import java.util.Arrays;
 
 @Controller
 public class FileController {
+    @Value("${jwt.secret}")
+    private String JWT_SECRET;
+
     private LoginService loginService;
     private FileService fileService;
+    private JWTService jwtService;
 
     @Autowired
     PageController pageController;
 
     @Autowired
-    public void setFileServices(LoginService loginService, FileService fileService) {
+    public void setFileServices(LoginService loginService, FileService fileService, JWTService jwtService) {
         this.loginService = loginService;
         this.fileService = fileService;
+        this.jwtService = jwtService;
     }
 
     private ResponseEntity checkCookies(HttpServletRequest request, HttpServletResponse response) {
@@ -70,13 +79,25 @@ public class FileController {
         return new ResponseEntity(HttpStatus.OK);
     }
 
+    private String createToken(String login, String claimToken) {
+        return JWT.create().withIssuer("biblioapp").withClaim("user", login)
+                .withClaim(claimToken, true).sign(Algorithm.HMAC256(JWT_SECRET.getBytes()));
+    }
+
     @RequestMapping(value = "/files", method = RequestMethod.GET)
     public String getFilePage(HttpServletRequest request, HttpServletResponse response, Model model) {
         ResponseEntity responseEntity = checkCookies(request, response);
         if (responseEntity.getStatusCode().equals(HttpStatus.OK)) {
-            //TODO obsługa JWT listowania
-            model.addAttribute("files", fileService.listAllFiles());
-            return "files";
+            Cookie[] cookies = request.getCookies();
+            Cookie user = Arrays.stream(cookies).filter(cookie -> cookie.getName().equals("user")).findAny().orElse(null);
+
+            if (jwtService.canIList(createToken(user.getValue(), "list"), user.getValue())) {
+                model.addAttribute("files", fileService.listAllFiles());
+                return "files";
+            } else {
+                System.out.println("Nie udało się autoryzować JWT");
+                return "forbidden";
+            }
         } else {
             return "forbidden";
         }
@@ -86,13 +107,16 @@ public class FileController {
     public String uploadFile(HttpServletRequest request, HttpServletResponse response, @ModelAttribute MultipartFile file) {
         ResponseEntity responseEntity = checkCookies(request, response);
         if (responseEntity.getStatusCode().equals(HttpStatus.OK)) {
-            //TODO obsługa JWT dodawania
-            try {
-                fileService.uploadFile(new UserForFileDTO("test", "test"), file);
-            } catch (IOException e) {
-                System.out.println("error");
-                e.printStackTrace();
-                return "redirect:/files";
+            Cookie[] cookies = request.getCookies();
+            Cookie user = Arrays.stream(cookies).filter(cookie -> cookie.getName().equals("user")).findAny().orElse(null);
+            if (jwtService.canIUpload(createToken(user.getValue(), "upload"), user.getValue())) {
+                try {
+                    fileService.uploadFile(new UserForFileDTO("test", "test"), file);
+                } catch (IOException e) {
+                    System.out.println("error");
+                    e.printStackTrace();
+                    return "redirect:/files";
+                }
             }
             return "redirect:/files";
         } else {
@@ -101,21 +125,31 @@ public class FileController {
     }
 
     @RequestMapping(value = "/files/download/{fileName}", method = RequestMethod.GET)
-    public HttpEntity<byte[]> downloadFile(@PathVariable("fileName") String fileName) {
-        byte[] file;
-        try {
-            file = fileService.downloadFile(fileName);
-        } catch (IllegalAccessException e) {
-            e.printStackTrace();
-            return new HttpEntity(HttpStatus.BAD_REQUEST);
-        } catch (IOException e) {
-            e.printStackTrace();
-            return new HttpEntity(HttpStatus.INTERNAL_SERVER_ERROR);
+    public HttpEntity<byte[]> downloadFile(HttpServletRequest request, HttpServletResponse response, @PathVariable("fileName") String fileName) {
+        ResponseEntity responseEntity = checkCookies(request, response);
+        if (!responseEntity.getStatusCode().equals(HttpStatus.OK)) {
+            return new HttpEntity(HttpStatus.FORBIDDEN);
         }
+        Cookie[] cookies = request.getCookies();
+        Cookie user = Arrays.stream(cookies).filter(cookie -> cookie.getName().equals("user")).findAny().orElse(null);
+        if (jwtService.canIDownload(createToken(user.getValue(), "download"), user.getValue())) {
+            byte[] file;
+            try {
+                file = fileService.downloadFile(fileName);
+            } catch (IllegalAccessException e) {
+                e.printStackTrace();
+                return new HttpEntity(HttpStatus.BAD_REQUEST);
+            } catch (IOException e) {
+                e.printStackTrace();
+                return new HttpEntity(HttpStatus.INTERNAL_SERVER_ERROR);
+            }
 
-        HttpHeaders headers = new HttpHeaders();
-        headers.set(HttpHeaders.CONTENT_DISPOSITION, "attachment; filename=" + fileName.replace(" ", "_"));
-        headers.setContentLength(file.length);
-        return new HttpEntity<>(file, headers);
+            HttpHeaders headers = new HttpHeaders();
+            headers.set(HttpHeaders.CONTENT_DISPOSITION, "attachment; filename=" + fileName.replace(" ", "_"));
+            headers.setContentLength(file.length);
+            return new HttpEntity<>(file, headers);
+        } else {
+            return new HttpEntity(HttpStatus.UNAUTHORIZED);
+        }
     }
 }
