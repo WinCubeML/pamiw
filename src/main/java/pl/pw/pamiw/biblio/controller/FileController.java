@@ -16,6 +16,7 @@ import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestMethod;
 import org.springframework.web.multipart.MultipartFile;
 import pl.pw.pamiw.biblio.exceptions.ExpiredSessionException;
+import pl.pw.pamiw.biblio.exceptions.FileNameAlreadyTakenException;
 import pl.pw.pamiw.biblio.exceptions.ForbiddenCookieException;
 import pl.pw.pamiw.biblio.model.SessionData;
 import pl.pw.pamiw.biblio.model.User;
@@ -115,11 +116,17 @@ public class FileController {
             Cookie user = Arrays.stream(cookies).filter(cookie -> cookie.getName().equals("user")).findAny().orElse(null);
             if (jwtService.canIUpload(createToken(user.getValue(), "upload"), user.getValue())) {
                 try {
+                    if (fileService.isFileNameTaken(file.getOriginalFilename())) {
+                        throw new FileNameAlreadyTakenException();
+                    }
                     User userDTO = userService.findByLogin(user.getValue());
                     fileService.uploadFile(new UserForFileDTO(userDTO.getName(), userDTO.getSurname()), file);
                 } catch (IOException e) {
                     System.out.println("error");
                     e.printStackTrace();
+                    return "redirect:/files";
+                } catch (FileNameAlreadyTakenException e) {
+                    System.out.println("Nazwa pliku zajęta");
                     return "redirect:/files";
                 }
             }

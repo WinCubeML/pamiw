@@ -63,6 +63,11 @@ public class FileServiceImpl implements FileService { //TODO implementacja serwi
     }
 
     @Override
+    public boolean isFileNameTaken(String fileName) {
+        return fileRepository.findById(fileName).isPresent();
+    }
+
+    @Override
     public byte[] downloadFile(String fileName) throws IllegalAccessException, IOException {
         String path = Paths.get(FILE_DIR).toAbsolutePath().toString();
         Path filePath = Paths.get(path, fileName);

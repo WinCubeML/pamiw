@@ -15,6 +15,8 @@ public interface FileService {
 
     List<FileDTO> listAllFiles();
 
+    boolean isFileNameTaken(String fileName);
+
     byte[] downloadFile(String fileName) throws IllegalAccessException, IOException;
 
     void deleteFile(String fileName);
