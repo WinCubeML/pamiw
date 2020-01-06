@@ -39,8 +39,14 @@ public class BibliographyServiceImpl implements BibliographyService {
     }
 
     @Override
-    public void addFileToBibliography(Bibliography bibliography, FileDTO file) {
-
+    public void addFileToBibliography(String bibliographyId, String fileName) {
+        Bibliography bib = bibliographyRepository.findById(bibliographyId).orElse(null);
+        bibliographyRepository.delete(bib);
+        if (null == bib.getFiles()) {
+            bib.setFiles(new ArrayList<>());
+        }
+        bib.getFiles().add(fileName);
+        bibliographyRepository.save(bib);
     }
 
     @Override

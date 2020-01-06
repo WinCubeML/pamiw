@@ -9,11 +9,13 @@ import org.springframework.http.ResponseEntity;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
 import org.springframework.web.bind.annotation.ModelAttribute;
+import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestMethod;
 import pl.pw.pamiw.biblio.exceptions.ExpiredSessionException;
 import pl.pw.pamiw.biblio.exceptions.ForbiddenCookieException;
 import pl.pw.pamiw.biblio.model.Bibliography;
+import pl.pw.pamiw.biblio.model.FileDTO;
 import pl.pw.pamiw.biblio.model.SessionData;
 import pl.pw.pamiw.biblio.service.BibliographyService;
 import pl.pw.pamiw.biblio.service.FileService;
@@ -23,7 +25,9 @@ import pl.pw.pamiw.biblio.service.LoginService;
 import javax.servlet.http.Cookie;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
+import java.util.ArrayList;
 import java.util.Arrays;
+import java.util.List;
 
 @Controller
 public class BibliographyController {
@@ -110,6 +114,25 @@ public class BibliographyController {
     @RequestMapping(value = "/pubs/create", method = RequestMethod.POST)
     public String createPublication(@ModelAttribute Bibliography bibliography) {
         bibliographyService.createBibliography(bibliography);
+        return "redirect:/pubs";
+    }
+
+    @RequestMapping(value = "/pubs/attach/{publicationId}", method = RequestMethod.GET)
+    public String attachFileToPublication(@PathVariable String publicationId, Model model) {
+        System.out.println(publicationId);
+        List<FileDTO> files = fileService.listAllFiles();
+        List<String> names = new ArrayList<>();
+        for (FileDTO file : files) {
+            names.add(file.getFileName());
+        }
+        model.addAttribute("fileNames", names);
+        model.addAttribute("pubId", publicationId);
+        return "attachtopub";
+    }
+
+    @RequestMapping(value = "/pubs/attach/{publicationId}/{filename}", method = RequestMethod.GET)
+    public String attachFile(@PathVariable String publicationId, @PathVariable String filename) {
+        bibliographyService.addFileToBibliography(publicationId, filename);
         return "redirect:/pubs";
     }
 }

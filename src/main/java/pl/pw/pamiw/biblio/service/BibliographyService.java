@@ -10,7 +10,7 @@ import java.util.List;
 public interface BibliographyService {
     void createBibliography(Bibliography bibliography);
 
-    void addFileToBibliography(Bibliography bibliography, FileDTO file);
+    void addFileToBibliography(String bibliographyId, String fileName);
 
     void deleteFileFromBibliography(Bibliography bibliography, FileDTO file);
 
