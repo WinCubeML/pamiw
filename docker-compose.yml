@@ -1,0 +1,13 @@
+version: "3"
+services:
+  web:
+    build:
+      ./
+    environment:
+      - REDIS_NAME=redis
+      - APP_URL=http://localhost:8080
+    depends_on:
+      - redis
+
+  redis:
+    image: redis
