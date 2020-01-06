@@ -61,7 +61,7 @@ public class BibliographyServiceImpl implements BibliographyService {
         if (null == bib.getFiles()) {
             bib.setFiles(new ArrayList<>());
         }
-        List<String> result = new ArrayList<>();
+        List<String> result;
         result = bib.getFiles().stream().filter(name -> !name.equals(fileName)).collect(Collectors.toList());
         bib.setFiles(result);
         bibliographyRepository.save(bib);
@@ -75,8 +75,8 @@ public class BibliographyServiceImpl implements BibliographyService {
     }
 
     @Override
-    public void deleteBibliography(Bibliography bibliography) {
-
+    public void deleteBibliography(String bibliographyId) {
+        bibliographyRepository.delete(bibliographyRepository.findById(bibliographyId).orElse(null));
     }
 
     private boolean isValidPageCount(Bibliography bibliography) {

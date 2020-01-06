@@ -106,19 +106,19 @@ public class BibliographyController {
     }
 
     @RequestMapping(value = "/pubs/create", method = RequestMethod.GET)
-    public String showCreatePublicationPage(Model model) {
+    public String showCreatePublicationPage(HttpServletRequest request, HttpServletResponse response, Model model) {
         model.addAttribute("bibliography", new Bibliography());
         return "addpub";
     }
 
     @RequestMapping(value = "/pubs/create", method = RequestMethod.POST)
-    public String createPublication(@ModelAttribute Bibliography bibliography) {
+    public String createPublication(HttpServletRequest request, HttpServletResponse response, @ModelAttribute Bibliography bibliography) {
         bibliographyService.createBibliography(bibliography);
         return "redirect:/pubs";
     }
 
     @RequestMapping(value = "/pubs/attach/{publicationId}", method = RequestMethod.GET)
-    public String attachFileToPublication(@PathVariable String publicationId, Model model) {
+    public String attachFileToPublication(HttpServletRequest request, HttpServletResponse response, @PathVariable String publicationId, Model model) {
         List<FileDTO> files = fileService.listAllFiles();
         List<String> names = new ArrayList<>();
         for (FileDTO file : files) {
@@ -130,13 +130,13 @@ public class BibliographyController {
     }
 
     @RequestMapping(value = "/pubs/attach/{publicationId}/{filename}", method = RequestMethod.GET)
-    public String attachFile(@PathVariable String publicationId, @PathVariable String filename) {
+    public String attachFile(HttpServletRequest request, HttpServletResponse response, @PathVariable String publicationId, @PathVariable String filename) {
         bibliographyService.addFileToBibliography(publicationId, filename);
         return "redirect:/pubs";
     }
 
     @RequestMapping(value = "/pubs/detach/{publicationId}", method = RequestMethod.GET)
-    public String detachFileFromPublication(@PathVariable String publicationId, Model model) {
+    public String detachFileFromPublication(HttpServletRequest request, HttpServletResponse response, @PathVariable String publicationId, Model model) {
         List<String> names = bibliographyService.getBibliographyFromId(publicationId).getFiles();
         model.addAttribute("fileNames", names);
         model.addAttribute("pubId", publicationId);
@@ -144,8 +144,14 @@ public class BibliographyController {
     }
 
     @RequestMapping(value = "/pubs/detach/{publicationId}/{filename}", method = RequestMethod.GET)
-    public String detachFile(@PathVariable String publicationId, @PathVariable String filename) {
+    public String detachFile(HttpServletRequest request, HttpServletResponse response, @PathVariable String publicationId, @PathVariable String filename) {
         bibliographyService.deleteFileFromBibliography(publicationId, filename);
+        return "redirect:/pubs";
+    }
+
+    @RequestMapping(value = "/pubs/delete/{publicationId}", method = RequestMethod.GET)
+    public String deletePublication(HttpServletRequest request, HttpServletResponse response, @PathVariable String publicationId) {
+        bibliographyService.deleteBibliography(publicationId);
         return "redirect:/pubs";
     }
 }

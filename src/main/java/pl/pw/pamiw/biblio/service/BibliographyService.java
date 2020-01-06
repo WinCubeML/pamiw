@@ -17,5 +17,5 @@ public interface BibliographyService {
 
     List<Bibliography> listBibliographies();
 
-    void deleteBibliography(Bibliography bibliography);
+    void deleteBibliography(String bibliographyId);
 }
