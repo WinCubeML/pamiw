@@ -27,14 +27,14 @@
             <td><b>Nazwa pliku</b></td>
             <td><b>Wstawiający</b></td>
             <td><b>Pobierz</b></td>
-            <td><b>Usuwanie (od części III)</b></td>
+            <td><b>Usuwanie</b></td>
         </tr>
         <th:block th:each="file : ${files}">
             <tr>
                 <td th:text="${file.getFileName()}"></td>
                 <td th:text="${file.getAuthorName() + ' ' + file.getAuthorSurname()}"></td>
                 <td><a th:href="@{'/files/download/'+${file.getFileName()}}">Pobierz</a></td>
-                <td>TODO</td>
+                <td><a th:href="@{'/files/delete/'+${file.getFileName()}}">Usuń</a></td>
             </tr>
         </th:block>
     </table>

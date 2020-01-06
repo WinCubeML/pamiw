@@ -164,4 +164,10 @@ public class FileController {
             return new HttpEntity(HttpStatus.UNAUTHORIZED);
         }
     }
+
+    @RequestMapping(value = "/files/delete/{filename}", method = RequestMethod.GET)
+    public String deleteFile(HttpServletRequest request, HttpServletResponse response, @PathVariable String filename) {
+        fileService.deleteFile(filename);
+        return "redirect:/files";
+    }
 }

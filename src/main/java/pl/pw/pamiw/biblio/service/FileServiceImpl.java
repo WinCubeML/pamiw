@@ -24,7 +24,6 @@ public class FileServiceImpl implements FileService { //TODO implementacja serwi
     private FileRepository fileRepository;
 
     private final String FILE_DIR = "FILES";
-    private final String FILE_TEMP = "TMP";
 
     @Autowired
     public FileServiceImpl(FileRepository fileRepository) {
@@ -80,6 +79,6 @@ public class FileServiceImpl implements FileService { //TODO implementacja serwi
 
     @Override
     public void deleteFile(String fileName) {
-
+        fileRepository.delete(fileRepository.findById(fileName).orElse(null));
     }
 }
