@@ -37,7 +37,12 @@
             </td>
             <td><a th:href="@{'/pubs/attach/'+${bib.getBibliographyId()}}">Powiąż</a></td>
             <td><a th:href="@{'/pubs/detach/'+${bib.getBibliographyId()}}">Usuń powiązanie</a></td>
-            <td><a th:href="@{'/pubs/delete/'+${bib.getBibliographyId()}}">Usuń publikację</a></td>
+            <td>
+                <form action="#" th:action="@{'/pubs/delete/'+${bib.getBibliographyId()}}" th:method="delete">
+                    <input type="hidden" name="_method" value="delete"/>
+                    <button type="submit" id="submitButton">Usuń publikację</button>
+                </form>
+            </td>
         </th:block>
     </table>
 </div>

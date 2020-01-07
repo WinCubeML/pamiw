@@ -153,6 +153,8 @@ public class BibliographyController {
             if (jwtService.canIUpload(createToken(user.getValue(), "upload"), user.getValue())) {
                 Bibliography bibliography = bibliographyService.getBibliographyFromId(publicationId);
                 List<String> filesInPub = bibliography.getFiles();
+                if (null == filesInPub)
+                    filesInPub = new ArrayList<>();
                 List<FileDTO> files = fileService.listAllFiles();
                 List<String> names = new ArrayList<>();
                 for (FileDTO file : files) {
@@ -230,7 +232,7 @@ public class BibliographyController {
         }
     }
 
-    @RequestMapping(value = "/pubs/delete/{publicationId}", method = RequestMethod.GET)
+    @RequestMapping(value = "/pubs/delete/{publicationId}", method = RequestMethod.POST)
     public String deletePublication(HttpServletRequest request, HttpServletResponse response, @PathVariable String publicationId) {
         ResponseEntity responseEntity = checkCookies(request, response);
         if (responseEntity.getStatusCode().equals(HttpStatus.OK)) {
