@@ -34,7 +34,12 @@
                 <td th:text="${file.getFileName()}"></td>
                 <td th:text="${file.getAuthorName() + ' ' + file.getAuthorSurname()}"></td>
                 <td><a th:href="@{'/files/download/'+${file.getFileName()}}">Pobierz</a></td>
-                <td><a th:href="@{'/files/delete/'+${file.getFileName()}}">Usuń</a></td>
+                <td>
+                    <form action="#" th:action="@{'/files/delete/'+${file.getFileName()}}" th:method="delete">
+                        <input type="hidden" name="_method" value="delete"/>
+                        <button type="submit" id="submitButton">Usuń</button>
+                    </form>
+                </td>
             </tr>
         </th:block>
     </table>

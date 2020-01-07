@@ -112,7 +112,7 @@ public class BibliographyController {
             Cookie[] cookies = request.getCookies();
             Cookie user = Arrays.stream(cookies).filter(cookie -> cookie.getName().equals("user")).findAny().orElse(null);
 
-            if (jwtService.canIUpload(createToken(user.getValue(), "list"), user.getValue())) {
+            if (jwtService.canIUpload(createToken(user.getValue(), "upload"), user.getValue())) {
                 model.addAttribute("bibliography", new Bibliography());
                 return "addpub";
             } else {
@@ -131,7 +131,7 @@ public class BibliographyController {
             Cookie[] cookies = request.getCookies();
             Cookie user = Arrays.stream(cookies).filter(cookie -> cookie.getName().equals("user")).findAny().orElse(null);
 
-            if (jwtService.canIUpload(createToken(user.getValue(), "list"), user.getValue())) {
+            if (jwtService.canIUpload(createToken(user.getValue(), "upload"), user.getValue())) {
                 bibliographyService.createBibliography(bibliography);
                 return "redirect:/pubs";
             } else {
@@ -150,11 +150,14 @@ public class BibliographyController {
             Cookie[] cookies = request.getCookies();
             Cookie user = Arrays.stream(cookies).filter(cookie -> cookie.getName().equals("user")).findAny().orElse(null);
 
-            if (jwtService.canIUpload(createToken(user.getValue(), "list"), user.getValue())) {
+            if (jwtService.canIUpload(createToken(user.getValue(), "upload"), user.getValue())) {
+                Bibliography bibliography = bibliographyService.getBibliographyFromId(publicationId);
+                List<String> filesInPub = bibliography.getFiles();
                 List<FileDTO> files = fileService.listAllFiles();
                 List<String> names = new ArrayList<>();
                 for (FileDTO file : files) {
-                    names.add(file.getFileName());
+                    if (!filesInPub.contains(file.getFileName()))
+                        names.add(file.getFileName());
                 }
                 model.addAttribute("fileNames", names);
                 model.addAttribute("pubId", publicationId);
@@ -175,7 +178,7 @@ public class BibliographyController {
             Cookie[] cookies = request.getCookies();
             Cookie user = Arrays.stream(cookies).filter(cookie -> cookie.getName().equals("user")).findAny().orElse(null);
 
-            if (jwtService.canIUpload(createToken(user.getValue(), "list"), user.getValue())) {
+            if (jwtService.canIUpload(createToken(user.getValue(), "upload"), user.getValue())) {
                 bibliographyService.addFileToBibliography(publicationId, filename);
                 return "redirect:/pubs";
             } else {
@@ -194,7 +197,7 @@ public class BibliographyController {
             Cookie[] cookies = request.getCookies();
             Cookie user = Arrays.stream(cookies).filter(cookie -> cookie.getName().equals("user")).findAny().orElse(null);
 
-            if (jwtService.canIDelete(createToken(user.getValue(), "list"), user.getValue())) {
+            if (jwtService.canIDelete(createToken(user.getValue(), "delete"), user.getValue())) {
                 List<String> names = bibliographyService.getBibliographyFromId(publicationId).getFiles();
                 model.addAttribute("fileNames", names);
                 model.addAttribute("pubId", publicationId);
@@ -215,7 +218,7 @@ public class BibliographyController {
             Cookie[] cookies = request.getCookies();
             Cookie user = Arrays.stream(cookies).filter(cookie -> cookie.getName().equals("user")).findAny().orElse(null);
 
-            if (jwtService.canIDelete(createToken(user.getValue(), "list"), user.getValue())) {
+            if (jwtService.canIDelete(createToken(user.getValue(), "delete"), user.getValue())) {
                 bibliographyService.deleteFileFromBibliography(publicationId, filename);
                 return "redirect:/pubs";
             } else {
@@ -234,7 +237,7 @@ public class BibliographyController {
             Cookie[] cookies = request.getCookies();
             Cookie user = Arrays.stream(cookies).filter(cookie -> cookie.getName().equals("user")).findAny().orElse(null);
 
-            if (jwtService.canIDelete(createToken(user.getValue(), "list"), user.getValue())) {
+            if (jwtService.canIDelete(createToken(user.getValue(), "delete"), user.getValue())) {
                 bibliographyService.deleteBibliography(publicationId);
                 return "redirect:/pubs";
             } else {

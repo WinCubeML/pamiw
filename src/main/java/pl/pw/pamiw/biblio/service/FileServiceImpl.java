@@ -19,7 +19,7 @@ import java.util.List;
 import java.util.stream.Collectors;
 
 @Service
-public class FileServiceImpl implements FileService { //TODO implementacja serwisu plików
+public class FileServiceImpl implements FileService {
 
     private FileRepository fileRepository;
 

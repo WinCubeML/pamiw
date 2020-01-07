@@ -71,7 +71,7 @@ public class LoginController {
 
         User user = userService.findByLogin(loginDTO.getLogin());
         StringBuilder sb = new StringBuilder();
-        sb.append(loginDTO.getPassword()).append(',').append(loginDTO.getPassword()); // TODO Wtf ten bypass
+        sb.append(loginDTO.getPassword()).append(',').append(loginDTO.getPassword());
         if (null != user && user.getPassword().equals(sb.toString())) {
             int cookieMaxAge = 5 * 60;
 

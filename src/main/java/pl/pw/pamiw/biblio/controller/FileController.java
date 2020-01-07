@@ -165,14 +165,14 @@ public class FileController {
         }
     }
 
-    @RequestMapping(value = "/files/delete/{filename}", method = RequestMethod.GET)
+    @RequestMapping(value = "/files/delete/{filename}", method = RequestMethod.POST)
     public String deleteFile(HttpServletRequest request, HttpServletResponse response, @PathVariable String filename) {
         ResponseEntity responseEntity = checkCookies(request, response);
         if (responseEntity.getStatusCode().equals(HttpStatus.OK)) {
             Cookie[] cookies = request.getCookies();
             Cookie user = Arrays.stream(cookies).filter(cookie -> cookie.getName().equals("user")).findAny().orElse(null);
 
-            if (jwtService.canIDelete(createToken(user.getValue(), "list"), user.getValue())) {
+            if (jwtService.canIDelete(createToken(user.getValue(), "delete"), user.getValue())) {
                 fileService.deleteFile(filename);
                 return "redirect:/files";
             } else {
