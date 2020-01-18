@@ -28,6 +28,9 @@ public class LoginController {
     PageController pageController;
 
     @Autowired
+    private AuthController authController;
+
+    @Autowired
     public void setLoginServices(UserService userService, LoginService loginService) {
         this.userService = userService;
         this.loginService = loginService;
@@ -129,6 +132,8 @@ public class LoginController {
 
     @RequestMapping(value = "/loginAuth0", method = RequestMethod.GET)
     public String loginWithAuth0(HttpServletRequest request, HttpServletResponse response) {
-        return "redirect:/notyetimplemented";
+        String redirectUrl = request.getScheme() + "://" + request.getServerName() + ":" + request.getServerPort() + "/callbackAuth0";
+        String authorizeUrl = authController.buildAuthorizeUrl(request, response, redirectUrl);
+        return "redirect:" + authorizeUrl;
     }
 }
