@@ -126,4 +126,9 @@ public class LoginController {
         }
         return "logout";
     }
+
+    @RequestMapping(value = "/loginAuth0", method = RequestMethod.GET)
+    public String loginWithAuth0(HttpServletRequest request, HttpServletResponse response) {
+        return "redirect:/notyetimplemented";
+    }
 }
