@@ -16,11 +16,9 @@ import pl.pw.pamiw.biblio.exceptions.ExpiredSessionException;
 import pl.pw.pamiw.biblio.exceptions.ForbiddenCookieException;
 import pl.pw.pamiw.biblio.model.Bibliography;
 import pl.pw.pamiw.biblio.model.FileDTO;
+import pl.pw.pamiw.biblio.model.Notification;
 import pl.pw.pamiw.biblio.model.SessionData;
-import pl.pw.pamiw.biblio.service.BibliographyService;
-import pl.pw.pamiw.biblio.service.FileService;
-import pl.pw.pamiw.biblio.service.JWTService;
-import pl.pw.pamiw.biblio.service.LoginService;
+import pl.pw.pamiw.biblio.service.*;
 
 import javax.servlet.http.Cookie;
 import javax.servlet.http.HttpServletRequest;
@@ -38,16 +36,18 @@ public class BibliographyController {
     private LoginService loginService;
     private FileService fileService;
     private BibliographyService bibliographyService;
+    private NotificationService notificationService;
 
     @Autowired
     PageController pageController;
 
     @Autowired
-    public void setServices(JWTService jwtService, LoginService loginService, FileService fileService, BibliographyService bibliographyService) {
+    public void setServices(JWTService jwtService, LoginService loginService, FileService fileService, BibliographyService bibliographyService, NotificationService notificationService) {
         this.jwtService = jwtService;
         this.loginService = loginService;
         this.fileService = fileService;
         this.bibliographyService = bibliographyService;
+        this.notificationService = notificationService;
     }
 
     private ResponseEntity checkCookies(HttpServletRequest request, HttpServletResponse response) {
@@ -133,6 +133,16 @@ public class BibliographyController {
 
             if (jwtService.canIUpload(createToken(user.getValue(), "upload"), user.getValue())) {
                 bibliographyService.createBibliography(bibliography);
+                List<SessionData> sessions = loginService.getAllSessions();
+                for (SessionData session : sessions) {
+                    Notification notification = new Notification();
+                    notification.setSeen(false);
+                    notification.setPubName(bibliography.getPublicationTitle());
+                    notification.setUserName(session.getLogin());
+                    notification.setSessionId(session.getSessionId());
+
+                    notificationService.createNotification(notification);
+                }
                 return "redirect:/pubs";
             } else {
                 System.out.println("Nie udało się autoryzować JWT");

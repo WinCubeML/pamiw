@@ -18,19 +18,18 @@ import org.springframework.web.multipart.MultipartFile;
 import pl.pw.pamiw.biblio.exceptions.ExpiredSessionException;
 import pl.pw.pamiw.biblio.exceptions.FileNameAlreadyTakenException;
 import pl.pw.pamiw.biblio.exceptions.ForbiddenCookieException;
+import pl.pw.pamiw.biblio.model.Notification;
 import pl.pw.pamiw.biblio.model.SessionData;
 import pl.pw.pamiw.biblio.model.User;
 import pl.pw.pamiw.biblio.model.UserForFileDTO;
-import pl.pw.pamiw.biblio.service.FileService;
-import pl.pw.pamiw.biblio.service.JWTService;
-import pl.pw.pamiw.biblio.service.LoginService;
-import pl.pw.pamiw.biblio.service.UserService;
+import pl.pw.pamiw.biblio.service.*;
 
 import javax.servlet.http.Cookie;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 import java.io.IOException;
 import java.util.Arrays;
+import java.util.List;
 
 @Controller
 public class FileController {
@@ -41,16 +40,18 @@ public class FileController {
     private LoginService loginService;
     private FileService fileService;
     private JWTService jwtService;
+    private NotificationService notificationService;
 
     @Autowired
     PageController pageController;
 
     @Autowired
-    public void setFileServices(UserService userService, LoginService loginService, FileService fileService, JWTService jwtService) {
+    public void setFileServices(UserService userService, LoginService loginService, FileService fileService, JWTService jwtService, NotificationService notificationService) {
         this.userService = userService;
         this.loginService = loginService;
         this.fileService = fileService;
         this.jwtService = jwtService;
+        this.notificationService = notificationService;
     }
 
     private ResponseEntity checkCookies(HttpServletRequest request, HttpServletResponse response) {
@@ -97,6 +98,10 @@ public class FileController {
             Cookie user = Arrays.stream(cookies).filter(cookie -> cookie.getName().equals("user")).findAny().orElse(null);
 
             if (jwtService.canIList(createToken(user.getValue(), "list"), user.getValue())) {
+                List<Notification> notifications = notificationService.getUnseenNotificationsForUserName(user.getValue());
+                for (Notification notification : notifications)
+                    System.out.println(notification.getPubName());
+
                 model.addAttribute("files", fileService.listAllFiles());
                 return "files";
             } else {

@@ -30,6 +30,11 @@ public class LoginServiceImpl implements LoginService {
     }
 
     @Override
+    public List<SessionData> getAllSessions() {
+        return (List<SessionData>) loginRepository.findAll();
+    }
+
+    @Override
     public void destroySession(SessionData sessionData) {
         loginRepository.delete(sessionData);
     }
