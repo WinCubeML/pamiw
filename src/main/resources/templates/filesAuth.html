@@ -1,0 +1,48 @@
+<!DOCTYPE html>
+<html lang="pl" xmlns:th="http://www.thymeleaf.org">
+<head>
+    <meta charset="UTF-8">
+    <title>Pliki</title>
+    <link th:href="@{/css/files.css}" rel="stylesheet" href="../static/css/files.css">
+</head>
+
+<body>
+<h1>Pliki na serwerze</h1>
+<a href="/logoutAuth">Wyloguj się</a><br>
+<a href="/pubs">Przejdź do widoku publikacji</a>
+<br>
+------------------------------------------<br>
+<form class="form" id="form" method="POST" enctype="multipart/form-data" th:action="@{/filesAuth0/upload}">
+    <div class="file">
+        <label for="file">Załącz plik:<br></label>
+        <input type="file" id="file" name="file">
+    </div>
+    <div>
+        <button type="submit" id="upload" class="btn">Udostępnij plik</button>
+    </div>
+</form>
+<div class="container">
+    <table>
+        <tr>
+            <td><b>Nazwa pliku</b></td>
+            <td><b>Wstawiający</b></td>
+            <td><b>Pobierz</b></td>
+            <td><b>Usuwanie</b></td>
+        </tr>
+        <th:block th:each="file : ${files}">
+            <tr>
+                <td th:text="${file.getFileName()}"></td>
+                <td th:text="${file.getAuthorName() + ' ' + file.getAuthorSurname()}"></td>
+                <td><a th:href="@{'/filesAuth0/download/'+${file.getFileName()}}">Pobierz</a></td>
+                <td>
+                    <form action="#" th:action="@{'/filesAuth0/delete/'+${file.getFileName()}}" th:method="delete">
+                        <input type="hidden" name="_method" value="delete"/>
+                        <button type="submit" id="submitButton">Usuń</button>
+                    </form>
+                </td>
+            </tr>
+        </th:block>
+    </table>
+</div>
+</body>
+</html>
