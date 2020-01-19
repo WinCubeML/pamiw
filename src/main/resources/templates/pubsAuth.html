@@ -8,9 +8,9 @@
 
 <body>
 <h1>Bibliografie</h1>
-<a href="/logout">Wyloguj się</a><br>
-<a href="/files">Przejdź do widoku plików</a><br>
-<a href="/pubs/create">Utwórz publikację</a>
+<a href="/logoutAuth">Wyloguj się</a><br>
+<a href="/filesAuth0">Przejdź do widoku plików</a><br>
+<a href="/pubsAuth0/create">Utwórz publikację</a>
 <br>
 ------------------------------------------<br>
 <div class="container">
@@ -36,10 +36,10 @@
                         <li th:text="${name}"></li>
                     </ul>
                 </td>
-                <td><a th:href="@{'/pubs/attach/'+${bib.getBibliographyId()}}">Powiąż</a></td>
-                <td><a th:href="@{'/pubs/detach/'+${bib.getBibliographyId()}}">Usuń powiązanie</a></td>
+                <td><a th:href="@{'/pubsAuth0/attach/'+${bib.getBibliographyId()}}">Powiąż</a></td>
+                <td><a th:href="@{'/pubsAuth0/detach/'+${bib.getBibliographyId()}}">Usuń powiązanie</a></td>
                 <td>
-                    <form action="#" th:action="@{'/pubs/delete/'+${bib.getBibliographyId()}}" th:method="delete">
+                    <form action="#" th:action="@{'/pubsAuth0/delete/'+${bib.getBibliographyId()}}" th:method="delete">
                         <input type="hidden" name="_method" value="delete"/>
                         <button type="submit" id="submitButton">Usuń publikację</button>
                     </form>

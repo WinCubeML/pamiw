@@ -1,0 +1,36 @@
+<!DOCTYPE html>
+<html lang="pl" xmlns:th="http://www.thymeleaf.org"
+      xmlns="http://www.w3.org/1999/xhtml">
+<head>
+    <meta charset="utf-8" http-equiv="Content-Type" content="text/html">
+    <title>Rejestracja użytkownika</title>
+    <link th:href="@{/css/signup.css}" rel="stylesheet" href="../static/css/signup.css">
+</head>
+<body>
+<!--/*@thymesVar id="bibliography" type="pl.pw.pamiw.biblio.model.Bibliography"*/-->
+<form class="form" id="form" method="POST" enctype="multipart/form-data" th:action="@{/pubsAuth0/create}"
+      th:object="${bibliography}">
+    <div class="formInputText center">
+        <label for="pubName">Tytuł publikacji:<br></label>
+        <input type="text" placeholder="Tytuł publikacji" name="pubName" id="pubName" th:field="*{publicationTitle}">
+    </div>
+    <div class="formInputText center">
+        <label for="pubAuthor">Autor:<br></label>
+        <input type="text" placeholder="Autor" name="pubAuthor" id="pubAuthor" th:field="*{publicationAuthor}">
+    </div>
+    <div class="formInputText center">
+        <label for="pubPageCount">Liczba stron:<br></label>
+        <input type="text" placeholder="Liczba stron" name="pubPageCount" id="pubPageCount"
+               th:field="*{publicationPageCount}">
+    </div>
+    <div class="formInputText center">
+        <label for="pubYear">Rok wydania:<br></label>
+        <input type="text" placeholder="Rok wydania" name="pubYear" id="pubYear" th:field="*{publicationYear}">
+    </div>
+    <br>
+    <div class="center">
+        <button type="submit" id="submitForm" class="btn">Zapisz publikację</button>
+    </div>
+</form>
+</body>
+</html>

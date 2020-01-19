@@ -1,0 +1,20 @@
+<!DOCTYPE html>
+<html lang="pl" xmlns:th="http://www.thymeleaf.org">
+<head>
+    <meta charset="UTF-8">
+    <title>Bibliografie</title>
+    <link th:href="@{/css/files.css}" rel="stylesheet" href="../static/css/files.css">
+</head>
+
+<body>
+<h1>Odłącz z publikacji</h1>
+<a href="/pubsAuth0">Anuluj odłączenie</a><br>
+<br>
+------------------------------------------<br>
+<div class="container">
+    <ul th:each="name : ${fileNames}">
+        <li><a th:href="@{'/pubsAuth0/detach/'+${pubId}+'/'+${name}}" th:text="${name}"></a></li>
+    </ul>
+</div>
+</body>
+</html>

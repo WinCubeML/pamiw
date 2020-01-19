@@ -35,6 +35,13 @@ public class BibliographyServiceImpl implements BibliographyService {
             temp.setPublicationYear(0);
         }
         temp.setFiles(new ArrayList<>());
+
+        long i = 0;
+        while (bibliographyRepository.existsById(String.valueOf(i))) {
+            i++;
+        }
+        temp.setBibliographyId(i);
+
         bibliographyRepository.save(temp);
     }
 
