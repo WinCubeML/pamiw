@@ -13,5 +13,5 @@ public interface NotificationService {
 
     List<Notification> getUnseenNotificationsForSessionId(String sessionId);
 
-    void setSeen(String notificationId);
+    void setSeen(long notificationId);
 }

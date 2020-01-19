@@ -20,12 +20,23 @@ public class NotificationServiceImpl implements NotificationService {
 
     @Override
     public Notification createNotification(Notification notification) {
-        return notificationRepository.save(notification);
+        long i = 0;
+        while (notificationRepository.existsById(String.valueOf(i)))
+            i++;
+        Notification temp = new Notification();
+        temp.setSessionId(notification.getSessionId());
+        temp.setUserName(notification.getUserName());
+        temp.setPubName(notification.getPubName());
+        temp.setSeen(notification.isSeen());
+        temp.setNotificationId(i);
+        return notificationRepository.save(temp);
     }
 
     @Override
     public List<Notification> getUnseenNotificationsForUserName(String userName) {
         List<Notification> notifications = (List<Notification>) notificationRepository.findAll();
+        if (notifications == null || notifications.size() == 0)
+            return null;
         notifications = notifications.stream()
                 .filter(notification -> notification.getUserName().equals(userName) && !notification.isSeen())
                 .collect(Collectors.toList());
@@ -42,8 +53,8 @@ public class NotificationServiceImpl implements NotificationService {
     }
 
     @Override
-    public void setSeen(String notificationId) {
-        Notification notification = notificationRepository.findById(notificationId).orElse(null);
+    public void setSeen(long notificationId) {
+        Notification notification = notificationRepository.findById(String.valueOf(notificationId)).orElse(null);
         if (notification == null)
             return;
         notificationRepository.delete(notification);

@@ -44,5 +44,19 @@
         </th:block>
     </table>
 </div>
+<script>
+    // async function getNotifications() {
+    //     let response = await fetch("/files/notify");
+    //     await new Promise(resolve => setTimeout(resolve, 1000));
+    //     await getNotifications();
+    // }
+    // getNotifications();
+    setInterval(async function () {
+        let response = await fetch("/files/notify");
+        let text = await response.text();
+        if (text !== "")
+            alert("Dodano nową publikację o nazwie: " + text);
+    }, 2000)
+</script>
 </body>
 </html>

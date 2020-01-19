@@ -10,10 +10,7 @@ import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
-import org.springframework.web.bind.annotation.ModelAttribute;
-import org.springframework.web.bind.annotation.PathVariable;
-import org.springframework.web.bind.annotation.RequestMapping;
-import org.springframework.web.bind.annotation.RequestMethod;
+import org.springframework.web.bind.annotation.*;
 import org.springframework.web.multipart.MultipartFile;
 import pl.pw.pamiw.biblio.exceptions.ExpiredSessionException;
 import pl.pw.pamiw.biblio.exceptions.FileNameAlreadyTakenException;
@@ -99,8 +96,9 @@ public class FileController {
 
             if (jwtService.canIList(createToken(user.getValue(), "list"), user.getValue())) {
                 List<Notification> notifications = notificationService.getUnseenNotificationsForUserName(user.getValue());
-                for (Notification notification : notifications)
-                    System.out.println(notification.getPubName());
+                if (notifications != null)
+                    for (Notification notification : notifications)
+                        System.out.println(notification.getPubName());
 
                 model.addAttribute("files", fileService.listAllFiles());
                 return "files";
@@ -111,6 +109,27 @@ public class FileController {
         } else {
             return "forbidden";
         }
+    }
+
+    @RequestMapping(value = "/files/notify", method = RequestMethod.GET)
+    @ResponseBody
+    public String getNotification(HttpServletRequest request, HttpServletResponse response, Model model) {
+        ResponseEntity responseEntity = checkCookies(request, response);
+        String sessionid = "";
+        if (responseEntity.getStatusCode().equals(HttpStatus.OK)) {
+            Cookie[] cookies = request.getCookies();
+            Cookie user = Arrays.stream(cookies).filter(cookie -> cookie.getName().equals("sessionid")).findAny().orElse(null);
+            sessionid = user.getValue();
+        } else {
+            return null;
+        }
+        List<Notification> notifications = notificationService.getUnseenNotificationsForSessionId(sessionid);
+        if (notifications == null || notifications.size() == 0)
+            return null;
+        for (Notification notification : notifications) {
+            notificationService.setSeen(notification.getNotificationId());
+        }
+        return notifications.get(0).getPubName();
     }
 
     @RequestMapping(value = "/files/upload", method = RequestMethod.POST)
