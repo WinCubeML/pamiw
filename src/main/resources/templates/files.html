@@ -45,18 +45,10 @@
     </table>
 </div>
 <script>
-    // async function getNotifications() {
-    //     let response = await fetch("/files/notify");
-    //     await new Promise(resolve => setTimeout(resolve, 1000));
-    //     await getNotifications();
-    // }
-    // getNotifications();
-    setInterval(async function () {
-        let response = await fetch("/files/notify");
-        let text = await response.text();
-        if (text !== "")
-            alert("Dodano nową publikację o nazwie: " + text);
-    }, 2000)
+    var sse = new EventSource('http://localhost:8080/files/notifysse');
+    sse.onmessage = function (e) {
+        alert("Nowa publikacja o nazwie: " + e.data);
+    }
 </script>
 </body>
 </html>

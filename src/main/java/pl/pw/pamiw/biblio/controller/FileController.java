@@ -10,7 +10,10 @@ import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
-import org.springframework.web.bind.annotation.*;
+import org.springframework.web.bind.annotation.ModelAttribute;
+import org.springframework.web.bind.annotation.PathVariable;
+import org.springframework.web.bind.annotation.RequestMapping;
+import org.springframework.web.bind.annotation.RequestMethod;
 import org.springframework.web.multipart.MultipartFile;
 import pl.pw.pamiw.biblio.exceptions.ExpiredSessionException;
 import pl.pw.pamiw.biblio.exceptions.FileNameAlreadyTakenException;
@@ -111,9 +114,7 @@ public class FileController {
         }
     }
 
-    @RequestMapping(value = "/files/notify", method = RequestMethod.GET)
-    @ResponseBody
-    public String getNotification(HttpServletRequest request, HttpServletResponse response, Model model) {
+    String getNotification(HttpServletRequest request, HttpServletResponse response) {
         ResponseEntity responseEntity = checkCookies(request, response);
         String sessionid = "";
         if (responseEntity.getStatusCode().equals(HttpStatus.OK)) {
