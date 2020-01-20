@@ -10,10 +10,9 @@ import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestMethod;
 import pl.pw.pamiw.biblio.model.Bibliography;
 import pl.pw.pamiw.biblio.model.FileDTO;
-import pl.pw.pamiw.biblio.service.BibliographyService;
-import pl.pw.pamiw.biblio.service.FileService;
-import pl.pw.pamiw.biblio.service.JWTService;
-import pl.pw.pamiw.biblio.service.LoginService;
+import pl.pw.pamiw.biblio.model.Notification;
+import pl.pw.pamiw.biblio.model.SessionData;
+import pl.pw.pamiw.biblio.service.*;
 
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
@@ -29,16 +28,18 @@ public class BibliographyAuth0Controller {
     private LoginService loginService;
     private FileService fileService;
     private BibliographyService bibliographyService;
+    private NotificationService notificationService;
 
     @Autowired
     PageController pageController;
 
     @Autowired
-    public void setServices(JWTService jwtService, LoginService loginService, FileService fileService, BibliographyService bibliographyService) {
+    public void setServices(JWTService jwtService, LoginService loginService, FileService fileService, BibliographyService bibliographyService, NotificationService notificationService) {
         this.jwtService = jwtService;
         this.loginService = loginService;
         this.fileService = fileService;
         this.bibliographyService = bibliographyService;
+        this.notificationService = notificationService;
     }
 
     @RequestMapping(value = "/pubsAuth0", method = RequestMethod.GET)
@@ -56,6 +57,16 @@ public class BibliographyAuth0Controller {
     @RequestMapping(value = "/pubsAuth0/create", method = RequestMethod.POST)
     public String createPublication(HttpServletRequest request, HttpServletResponse response, @ModelAttribute Bibliography bibliography) {
         bibliographyService.createBibliography(bibliography);
+        List<SessionData> sessions = loginService.getAllSessions();
+        for (SessionData session : sessions) {
+            Notification notification = new Notification();
+            notification.setSeen(false);
+            notification.setPubName(bibliography.getPublicationTitle());
+            notification.setUserName(session.getLogin());
+            notification.setSessionId(session.getSessionId());
+
+            notificationService.createNotification(notification);
+        }
         return "redirect:/pubsAuth0";
     }
 
