@@ -98,11 +98,6 @@ public class FileController {
             Cookie user = Arrays.stream(cookies).filter(cookie -> cookie.getName().equals("user")).findAny().orElse(null);
 
             if (jwtService.canIList(createToken(user.getValue(), "list"), user.getValue())) {
-                List<Notification> notifications = notificationService.getUnseenNotificationsForUserName(user.getValue());
-                if (notifications != null)
-                    for (Notification notification : notifications)
-                        System.out.println(notification.getPubName());
-
                 model.addAttribute("files", fileService.listAllFiles());
                 return "files";
             } else {
