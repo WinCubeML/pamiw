@@ -44,11 +44,6 @@
         </th:block>
     </table>
 </div>
-<script>
-    var sse = new EventSource('http://localhost:8080/files/notifysse');
-    sse.onmessage = function (e) {
-        alert("Nowa publikacja o nazwie: " + e.data);
-    }
-</script>
+<script th:src="@{/js/getNotifications.js}"></script>
 </body>
 </html>

@@ -18,7 +18,6 @@ import org.springframework.web.multipart.MultipartFile;
 import pl.pw.pamiw.biblio.exceptions.ExpiredSessionException;
 import pl.pw.pamiw.biblio.exceptions.FileNameAlreadyTakenException;
 import pl.pw.pamiw.biblio.exceptions.ForbiddenCookieException;
-import pl.pw.pamiw.biblio.model.Notification;
 import pl.pw.pamiw.biblio.model.SessionData;
 import pl.pw.pamiw.biblio.model.User;
 import pl.pw.pamiw.biblio.model.UserForFileDTO;
@@ -29,7 +28,6 @@ import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 import java.io.IOException;
 import java.util.Arrays;
-import java.util.List;
 
 @Controller
 public class FileController {
@@ -54,7 +52,7 @@ public class FileController {
         this.notificationService = notificationService;
     }
 
-    private ResponseEntity checkCookies(HttpServletRequest request, HttpServletResponse response) {
+    ResponseEntity checkCookies(HttpServletRequest request, HttpServletResponse response) {
         loginService.checkExpiredSessions();
         try {
             Cookie[] cookies = request.getCookies();
@@ -107,25 +105,6 @@ public class FileController {
         } else {
             return "forbidden";
         }
-    }
-
-    String getNotification(HttpServletRequest request, HttpServletResponse response) {
-        ResponseEntity responseEntity = checkCookies(request, response);
-        String sessionid = "";
-        if (responseEntity.getStatusCode().equals(HttpStatus.OK)) {
-            Cookie[] cookies = request.getCookies();
-            Cookie user = Arrays.stream(cookies).filter(cookie -> cookie.getName().equals("sessionid")).findAny().orElse(null);
-            sessionid = user.getValue();
-        } else {
-            return null;
-        }
-        List<Notification> notifications = notificationService.getUnseenNotificationsForSessionId(sessionid);
-        if (notifications == null || notifications.size() == 0)
-            return null;
-        for (Notification notification : notifications) {
-            notificationService.setSeen(notification.getNotificationId());
-        }
-        return notifications.get(0).getPubName();
     }
 
     @RequestMapping(value = "/files/upload", method = RequestMethod.POST)
