@@ -130,7 +130,6 @@ public class BibliographyController {
         if (responseEntity.getStatusCode().equals(HttpStatus.OK)) {
             Cookie[] cookies = request.getCookies();
             Cookie user = Arrays.stream(cookies).filter(cookie -> cookie.getName().equals("user")).findAny().orElse(null);
-            Cookie sessionid = Arrays.stream(cookies).filter(cookie -> cookie.getName().equals("sessionid")).findAny().orElse(null);
 
             if (jwtService.canIUpload(createToken(user.getValue(), "upload"), user.getValue())) {
                 bibliographyService.createBibliography(bibliography);
