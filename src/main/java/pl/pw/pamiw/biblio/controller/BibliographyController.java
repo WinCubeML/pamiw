@@ -135,6 +135,8 @@ public class BibliographyController {
                 bibliographyService.createBibliography(bibliography);
                 List<SessionData> sessions = loginService.getAllSessions();
                 for (SessionData session : sessions) {
+                    if (!session.getLogin().equals(user.getValue()))
+                        continue;
                     Notification notification = new Notification();
                     notification.setSeen(false);
                     notification.setPubName(bibliography.getPublicationTitle());
